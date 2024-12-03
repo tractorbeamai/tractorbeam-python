@@ -1,7 +1,7 @@
 [project]
 name = "tractorbeam"
 version = "0.0.1-alpha.0"
-description = "The official Python library for the tractorbeam API"
+description = "The official Python library for the Tractorbeam API"
 dynamic = ["readme"]
 license = "Apache-2.0"
 authors = [
