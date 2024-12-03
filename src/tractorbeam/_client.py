@@ -78,13 +78,13 @@ class Tractorbeam(SyncAPIClient):
     ) -> None:
         """Construct a new synchronous Tractorbeam client instance.
 
-        This automatically infers the `api_key` argument from the `TBM_API_KEY` environment variable if it is not provided.
+        This automatically infers the `api_key` argument from the `TRACTORBEAM_API_KEY` environment variable if it is not provided.
         """
         if api_key is None:
-            api_key = os.environ.get("TBM_API_KEY")
+            api_key = os.environ.get("TRACTORBEAM_API_KEY")
         if api_key is None:
             raise TractorbeamError(
-                "The api_key client option must be set either by passing api_key to the client or by setting the TBM_API_KEY environment variable"
+                "The api_key client option must be set either by passing api_key to the client or by setting the TRACTORBEAM_API_KEY environment variable"
             )
         self.api_key = api_key
 
@@ -246,13 +246,13 @@ class AsyncTractorbeam(AsyncAPIClient):
     ) -> None:
         """Construct a new async Tractorbeam client instance.
 
-        This automatically infers the `api_key` argument from the `TBM_API_KEY` environment variable if it is not provided.
+        This automatically infers the `api_key` argument from the `TRACTORBEAM_API_KEY` environment variable if it is not provided.
         """
         if api_key is None:
-            api_key = os.environ.get("TBM_API_KEY")
+            api_key = os.environ.get("TRACTORBEAM_API_KEY")
         if api_key is None:
             raise TractorbeamError(
-                "The api_key client option must be set either by passing api_key to the client or by setting the TBM_API_KEY environment variable"
+                "The api_key client option must be set either by passing api_key to the client or by setting the TRACTORBEAM_API_KEY environment variable"
             )
         self.api_key = api_key
 
