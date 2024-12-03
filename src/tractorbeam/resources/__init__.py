@@ -8,14 +8,6 @@ from .graphs import (
     GraphsResourceWithStreamingResponse,
     AsyncGraphsResourceWithStreamingResponse,
 )
-from .health import (
-    HealthResource,
-    AsyncHealthResource,
-    HealthResourceWithRawResponse,
-    AsyncHealthResourceWithRawResponse,
-    HealthResourceWithStreamingResponse,
-    AsyncHealthResourceWithStreamingResponse,
-)
 
 __all__ = [
     "GraphsResource",
@@ -24,10 +16,4 @@ __all__ = [
     "AsyncGraphsResourceWithRawResponse",
     "GraphsResourceWithStreamingResponse",
     "AsyncGraphsResourceWithStreamingResponse",
-    "HealthResource",
-    "AsyncHealthResource",
-    "HealthResourceWithRawResponse",
-    "AsyncHealthResourceWithRawResponse",
-    "HealthResourceWithStreamingResponse",
-    "AsyncHealthResourceWithStreamingResponse",
 ]

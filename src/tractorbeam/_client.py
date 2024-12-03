@@ -47,7 +47,6 @@ __all__ = [
 
 class Tractorbeam(SyncAPIClient):
     graphs: resources.GraphsResource
-    health: resources.HealthResource
     with_raw_response: TractorbeamWithRawResponse
     with_streaming_response: TractorbeamWithStreamedResponse
 
@@ -77,15 +76,15 @@ class Tractorbeam(SyncAPIClient):
         # part of our public interface in the future.
         _strict_response_validation: bool = False,
     ) -> None:
-        """Construct a new synchronous tractorbeam client instance.
+        """Construct a new synchronous Tractorbeam client instance.
 
-        This automatically infers the `api_key` argument from the `TRACTORBEAM_API_KEY` environment variable if it is not provided.
+        This automatically infers the `api_key` argument from the `TBM_API_KEY` environment variable if it is not provided.
         """
         if api_key is None:
-            api_key = os.environ.get("TRACTORBEAM_API_KEY")
+            api_key = os.environ.get("TBM_API_KEY")
         if api_key is None:
             raise TractorbeamError(
-                "The api_key client option must be set either by passing api_key to the client or by setting the TRACTORBEAM_API_KEY environment variable"
+                "The api_key client option must be set either by passing api_key to the client or by setting the TBM_API_KEY environment variable"
             )
         self.api_key = api_key
 
@@ -106,7 +105,6 @@ class Tractorbeam(SyncAPIClient):
         )
 
         self.graphs = resources.GraphsResource(self)
-        self.health = resources.HealthResource(self)
         self.with_raw_response = TractorbeamWithRawResponse(self)
         self.with_streaming_response = TractorbeamWithStreamedResponse(self)
 
@@ -217,7 +215,6 @@ class Tractorbeam(SyncAPIClient):
 
 class AsyncTractorbeam(AsyncAPIClient):
     graphs: resources.AsyncGraphsResource
-    health: resources.AsyncHealthResource
     with_raw_response: AsyncTractorbeamWithRawResponse
     with_streaming_response: AsyncTractorbeamWithStreamedResponse
 
@@ -247,15 +244,15 @@ class AsyncTractorbeam(AsyncAPIClient):
         # part of our public interface in the future.
         _strict_response_validation: bool = False,
     ) -> None:
-        """Construct a new async tractorbeam client instance.
+        """Construct a new async Tractorbeam client instance.
 
-        This automatically infers the `api_key` argument from the `TRACTORBEAM_API_KEY` environment variable if it is not provided.
+        This automatically infers the `api_key` argument from the `TBM_API_KEY` environment variable if it is not provided.
         """
         if api_key is None:
-            api_key = os.environ.get("TRACTORBEAM_API_KEY")
+            api_key = os.environ.get("TBM_API_KEY")
         if api_key is None:
             raise TractorbeamError(
-                "The api_key client option must be set either by passing api_key to the client or by setting the TRACTORBEAM_API_KEY environment variable"
+                "The api_key client option must be set either by passing api_key to the client or by setting the TBM_API_KEY environment variable"
             )
         self.api_key = api_key
 
@@ -276,7 +273,6 @@ class AsyncTractorbeam(AsyncAPIClient):
         )
 
         self.graphs = resources.AsyncGraphsResource(self)
-        self.health = resources.AsyncHealthResource(self)
         self.with_raw_response = AsyncTractorbeamWithRawResponse(self)
         self.with_streaming_response = AsyncTractorbeamWithStreamedResponse(self)
 
@@ -388,25 +384,21 @@ class AsyncTractorbeam(AsyncAPIClient):
 class TractorbeamWithRawResponse:
     def __init__(self, client: Tractorbeam) -> None:
         self.graphs = resources.GraphsResourceWithRawResponse(client.graphs)
-        self.health = resources.HealthResourceWithRawResponse(client.health)
 
 
 class AsyncTractorbeamWithRawResponse:
     def __init__(self, client: AsyncTractorbeam) -> None:
         self.graphs = resources.AsyncGraphsResourceWithRawResponse(client.graphs)
-        self.health = resources.AsyncHealthResourceWithRawResponse(client.health)
 
 
 class TractorbeamWithStreamedResponse:
     def __init__(self, client: Tractorbeam) -> None:
         self.graphs = resources.GraphsResourceWithStreamingResponse(client.graphs)
-        self.health = resources.HealthResourceWithStreamingResponse(client.health)
 
 
 class AsyncTractorbeamWithStreamedResponse:
     def __init__(self, client: AsyncTractorbeam) -> None:
         self.graphs = resources.AsyncGraphsResourceWithStreamingResponse(client.graphs)
-        self.health = resources.AsyncHealthResourceWithStreamingResponse(client.health)
 
 
 Client = Tractorbeam
