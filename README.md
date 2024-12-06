@@ -15,8 +15,8 @@ The REST API documentation can be found on [docs.tractorbeam.com](https://docs.t
 ## Installation
 
 ```sh
-# install from this staging repo
-pip install git+ssh://git@github.com/stainless-sdks/tractorbeam-python.git
+# install from the production repo
+pip install git+ssh://git@github.com/tractorbeamai/tractorbeam-python.git
 ```
 
 > [!NOTE]
@@ -210,9 +210,9 @@ graph = response.parse()  # get the object that `graphs.create()` would have ret
 print(graph)
 ```
 
-These methods return an [`APIResponse`](https://github.com/stainless-sdks/tractorbeam-python/tree/main/src/tractorbeam/_response.py) object.
+These methods return an [`APIResponse`](https://github.com/tractorbeamai/tractorbeam-python/tree/main/src/tractorbeam/_response.py) object.
 
-The async client returns an [`AsyncAPIResponse`](https://github.com/stainless-sdks/tractorbeam-python/tree/main/src/tractorbeam/_response.py) with the same structure, the only difference being `await`able methods for reading the response content.
+The async client returns an [`AsyncAPIResponse`](https://github.com/tractorbeamai/tractorbeam-python/tree/main/src/tractorbeam/_response.py) with the same structure, the only difference being `await`able methods for reading the response content.
 
 #### `.with_streaming_response`
 
@@ -308,7 +308,7 @@ This package generally follows [SemVer](https://semver.org/spec/v2.0.0.html) con
 
 We take backwards-compatibility seriously and work hard to ensure you can rely on a smooth upgrade experience.
 
-We are keen for your feedback; please open an [issue](https://www.github.com/stainless-sdks/tractorbeam-python/issues) with questions, bugs, or suggestions.
+We are keen for your feedback; please open an [issue](https://www.github.com/tractorbeamai/tractorbeam-python/issues) with questions, bugs, or suggestions.
 
 ### Determining the installed version
 
