@@ -8,7 +8,7 @@ from typing_extensions import Self, override
 
 import httpx
 
-from . import resources, _exceptions
+from . import _exceptions
 from ._qs import Querystring
 from ._types import (
     NOT_GIVEN,
@@ -24,6 +24,7 @@ from ._utils import (
     get_async_library,
 )
 from ._version import __version__
+from .resources import graphs
 from ._streaming import Stream as Stream, AsyncStream as AsyncStream
 from ._exceptions import APIStatusError, TractorbeamError
 from ._base_client import (
@@ -37,7 +38,6 @@ __all__ = [
     "Transport",
     "ProxiesTypes",
     "RequestOptions",
-    "resources",
     "Tractorbeam",
     "AsyncTractorbeam",
     "Client",
@@ -46,7 +46,7 @@ __all__ = [
 
 
 class Tractorbeam(SyncAPIClient):
-    graphs: resources.GraphsResource
+    graphs: graphs.GraphsResource
     with_raw_response: TractorbeamWithRawResponse
     with_streaming_response: TractorbeamWithStreamedResponse
 
@@ -104,7 +104,7 @@ class Tractorbeam(SyncAPIClient):
             _strict_response_validation=_strict_response_validation,
         )
 
-        self.graphs = resources.GraphsResource(self)
+        self.graphs = graphs.GraphsResource(self)
         self.with_raw_response = TractorbeamWithRawResponse(self)
         self.with_streaming_response = TractorbeamWithStreamedResponse(self)
 
@@ -214,7 +214,7 @@ class Tractorbeam(SyncAPIClient):
 
 
 class AsyncTractorbeam(AsyncAPIClient):
-    graphs: resources.AsyncGraphsResource
+    graphs: graphs.AsyncGraphsResource
     with_raw_response: AsyncTractorbeamWithRawResponse
     with_streaming_response: AsyncTractorbeamWithStreamedResponse
 
@@ -272,7 +272,7 @@ class AsyncTractorbeam(AsyncAPIClient):
             _strict_response_validation=_strict_response_validation,
         )
 
-        self.graphs = resources.AsyncGraphsResource(self)
+        self.graphs = graphs.AsyncGraphsResource(self)
         self.with_raw_response = AsyncTractorbeamWithRawResponse(self)
         self.with_streaming_response = AsyncTractorbeamWithStreamedResponse(self)
 
@@ -383,22 +383,22 @@ class AsyncTractorbeam(AsyncAPIClient):
 
 class TractorbeamWithRawResponse:
     def __init__(self, client: Tractorbeam) -> None:
-        self.graphs = resources.GraphsResourceWithRawResponse(client.graphs)
+        self.graphs = graphs.GraphsResourceWithRawResponse(client.graphs)
 
 
 class AsyncTractorbeamWithRawResponse:
     def __init__(self, client: AsyncTractorbeam) -> None:
-        self.graphs = resources.AsyncGraphsResourceWithRawResponse(client.graphs)
+        self.graphs = graphs.AsyncGraphsResourceWithRawResponse(client.graphs)
 
 
 class TractorbeamWithStreamedResponse:
     def __init__(self, client: Tractorbeam) -> None:
-        self.graphs = resources.GraphsResourceWithStreamingResponse(client.graphs)
+        self.graphs = graphs.GraphsResourceWithStreamingResponse(client.graphs)
 
 
 class AsyncTractorbeamWithStreamedResponse:
     def __init__(self, client: AsyncTractorbeam) -> None:
-        self.graphs = resources.AsyncGraphsResourceWithStreamingResponse(client.graphs)
+        self.graphs = graphs.AsyncGraphsResourceWithStreamingResponse(client.graphs)
 
 
 Client = Tractorbeam
