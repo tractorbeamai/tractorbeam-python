@@ -9,7 +9,7 @@ import pytest
 
 from tests.utils import assert_matches_type
 from tractorbeam import Tractorbeam, AsyncTractorbeam
-from tractorbeam.types.documents import DocumentContents
+from tractorbeam.types import DocumentContents
 
 base_url = os.environ.get("TEST_API_BASE_URL", "http://127.0.0.1:4010")
 

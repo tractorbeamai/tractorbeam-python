@@ -6,7 +6,7 @@ from typing import List
 
 import httpx
 
-from ..types import query_query_params, query_decode_params
+from ..types import query_decode_params
 from .._types import NOT_GIVEN, Body, Query, Headers, NotGiven
 from .._utils import (
     maybe_transform,
@@ -21,7 +21,6 @@ from .._response import (
     async_to_streamed_response_wrapper,
 )
 from .._base_client import make_request_options
-from ..types.query_query_response import QueryQueryResponse
 from ..types.query_decode_response import QueryDecodeResponse
 
 __all__ = ["QueriesResource", "AsyncQueriesResource"]
@@ -89,47 +88,6 @@ class QueriesResource(SyncAPIResource):
             cast_to=QueryDecodeResponse,
         )
 
-    def query(
-        self,
-        *,
-        depth: int,
-        graph_names: List[str],
-        query: str,
-        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
-        # The extra values given here take precedence over values defined on the client or passed to this method.
-        extra_headers: Headers | None = None,
-        extra_query: Query | None = None,
-        extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
-    ) -> QueryQueryResponse:
-        """
-        Execute a natural language query across multiple graphs.
-
-        Args:
-          extra_headers: Send extra headers
-
-          extra_query: Add additional query parameters to the request
-
-          extra_body: Add additional JSON properties to the request
-
-          timeout: Override the client-level default timeout for this request, in seconds
-        """
-        return self._post(
-            "/query",
-            body=maybe_transform(
-                {
-                    "depth": depth,
-                    "graph_names": graph_names,
-                    "query": query,
-                },
-                query_query_params.QueryQueryParams,
-            ),
-            options=make_request_options(
-                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
-            ),
-            cast_to=QueryQueryResponse,
-        )
-
 
 class AsyncQueriesResource(AsyncAPIResource):
     @cached_property
@@ -193,47 +151,6 @@ class AsyncQueriesResource(AsyncAPIResource):
             cast_to=QueryDecodeResponse,
         )
 
-    async def query(
-        self,
-        *,
-        depth: int,
-        graph_names: List[str],
-        query: str,
-        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
-        # The extra values given here take precedence over values defined on the client or passed to this method.
-        extra_headers: Headers | None = None,
-        extra_query: Query | None = None,
-        extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
-    ) -> QueryQueryResponse:
-        """
-        Execute a natural language query across multiple graphs.
-
-        Args:
-          extra_headers: Send extra headers
-
-          extra_query: Add additional query parameters to the request
-
-          extra_body: Add additional JSON properties to the request
-
-          timeout: Override the client-level default timeout for this request, in seconds
-        """
-        return await self._post(
-            "/query",
-            body=await async_maybe_transform(
-                {
-                    "depth": depth,
-                    "graph_names": graph_names,
-                    "query": query,
-                },
-                query_query_params.QueryQueryParams,
-            ),
-            options=make_request_options(
-                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
-            ),
-            cast_to=QueryQueryResponse,
-        )
-
 
 class QueriesResourceWithRawResponse:
     def __init__(self, queries: QueriesResource) -> None:
@@ -241,9 +158,6 @@ class QueriesResourceWithRawResponse:
 
         self.decode = to_raw_response_wrapper(
             queries.decode,
-        )
-        self.query = to_raw_response_wrapper(
-            queries.query,
         )
 
 
@@ -254,9 +168,6 @@ class AsyncQueriesResourceWithRawResponse:
         self.decode = async_to_raw_response_wrapper(
             queries.decode,
         )
-        self.query = async_to_raw_response_wrapper(
-            queries.query,
-        )
 
 
 class QueriesResourceWithStreamingResponse:
@@ -266,9 +177,6 @@ class QueriesResourceWithStreamingResponse:
         self.decode = to_streamed_response_wrapper(
             queries.decode,
         )
-        self.query = to_streamed_response_wrapper(
-            queries.query,
-        )
 
 
 class AsyncQueriesResourceWithStreamingResponse:
@@ -277,7 +185,4 @@ class AsyncQueriesResourceWithStreamingResponse:
 
         self.decode = async_to_streamed_response_wrapper(
             queries.decode,
-        )
-        self.query = async_to_streamed_response_wrapper(
-            queries.query,
         )

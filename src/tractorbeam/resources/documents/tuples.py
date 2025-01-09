@@ -18,7 +18,7 @@ from ..._response import (
     async_to_streamed_response_wrapper,
 )
 from ..._base_client import make_request_options
-from ...types.documents import tuple_retrieve_params
+from ...types.documents import tuple_list_params
 
 __all__ = ["TuplesResource", "AsyncTuplesResource"]
 
@@ -43,7 +43,7 @@ class TuplesResource(SyncAPIResource):
         """
         return TuplesResourceWithStreamingResponse(self)
 
-    def retrieve(
+    def list(
         self,
         id: str,
         *,
@@ -82,7 +82,7 @@ class TuplesResource(SyncAPIResource):
                 extra_query=extra_query,
                 extra_body=extra_body,
                 timeout=timeout,
-                query=maybe_transform({"stream": stream}, tuple_retrieve_params.TupleRetrieveParams),
+                query=maybe_transform({"stream": stream}, tuple_list_params.TupleListParams),
             ),
             cast_to=NoneType,
         )
@@ -108,7 +108,7 @@ class AsyncTuplesResource(AsyncAPIResource):
         """
         return AsyncTuplesResourceWithStreamingResponse(self)
 
-    async def retrieve(
+    async def list(
         self,
         id: str,
         *,
@@ -147,7 +147,7 @@ class AsyncTuplesResource(AsyncAPIResource):
                 extra_query=extra_query,
                 extra_body=extra_body,
                 timeout=timeout,
-                query=await async_maybe_transform({"stream": stream}, tuple_retrieve_params.TupleRetrieveParams),
+                query=await async_maybe_transform({"stream": stream}, tuple_list_params.TupleListParams),
             ),
             cast_to=NoneType,
         )
@@ -157,8 +157,8 @@ class TuplesResourceWithRawResponse:
     def __init__(self, tuples: TuplesResource) -> None:
         self._tuples = tuples
 
-        self.retrieve = to_raw_response_wrapper(
-            tuples.retrieve,
+        self.list = to_raw_response_wrapper(
+            tuples.list,
         )
 
 
@@ -166,8 +166,8 @@ class AsyncTuplesResourceWithRawResponse:
     def __init__(self, tuples: AsyncTuplesResource) -> None:
         self._tuples = tuples
 
-        self.retrieve = async_to_raw_response_wrapper(
-            tuples.retrieve,
+        self.list = async_to_raw_response_wrapper(
+            tuples.list,
         )
 
 
@@ -175,8 +175,8 @@ class TuplesResourceWithStreamingResponse:
     def __init__(self, tuples: TuplesResource) -> None:
         self._tuples = tuples
 
-        self.retrieve = to_streamed_response_wrapper(
-            tuples.retrieve,
+        self.list = to_streamed_response_wrapper(
+            tuples.list,
         )
 
 
@@ -184,6 +184,6 @@ class AsyncTuplesResourceWithStreamingResponse:
     def __init__(self, tuples: AsyncTuplesResource) -> None:
         self._tuples = tuples
 
-        self.retrieve = async_to_streamed_response_wrapper(
-            tuples.retrieve,
+        self.list = async_to_streamed_response_wrapper(
+            tuples.list,
         )

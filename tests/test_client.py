@@ -35,7 +35,7 @@ from tractorbeam._base_client import (
 from .utils import update_env
 
 base_url = os.environ.get("TEST_API_BASE_URL", "http://127.0.0.1:4010")
-bearer_token = "My Bearer Token"
+api_token = "My API Token"
 
 
 def _get_params(client: BaseClient[Any, Any]) -> dict[str, str]:
@@ -57,7 +57,7 @@ def _get_open_connections(client: Tractorbeam | AsyncTractorbeam) -> int:
 
 
 class TestTractorbeam:
-    client = Tractorbeam(base_url=base_url, bearer_token=bearer_token, _strict_response_validation=True)
+    client = Tractorbeam(base_url=base_url, api_token=api_token, _strict_response_validation=True)
 
     @pytest.mark.respx(base_url=base_url)
     def test_raw_response(self, respx_mock: MockRouter) -> None:
@@ -83,9 +83,9 @@ class TestTractorbeam:
         copied = self.client.copy()
         assert id(copied) != id(self.client)
 
-        copied = self.client.copy(bearer_token="another My Bearer Token")
-        assert copied.bearer_token == "another My Bearer Token"
-        assert self.client.bearer_token == "My Bearer Token"
+        copied = self.client.copy(api_token="another My API Token")
+        assert copied.api_token == "another My API Token"
+        assert self.client.api_token == "My API Token"
 
     def test_copy_default_options(self) -> None:
         # options that have a default are overridden correctly
@@ -105,10 +105,7 @@ class TestTractorbeam:
 
     def test_copy_default_headers(self) -> None:
         client = Tractorbeam(
-            base_url=base_url,
-            bearer_token=bearer_token,
-            _strict_response_validation=True,
-            default_headers={"X-Foo": "bar"},
+            base_url=base_url, api_token=api_token, _strict_response_validation=True, default_headers={"X-Foo": "bar"}
         )
         assert client.default_headers["X-Foo"] == "bar"
 
@@ -142,7 +139,7 @@ class TestTractorbeam:
 
     def test_copy_default_query(self) -> None:
         client = Tractorbeam(
-            base_url=base_url, bearer_token=bearer_token, _strict_response_validation=True, default_query={"foo": "bar"}
+            base_url=base_url, api_token=api_token, _strict_response_validation=True, default_query={"foo": "bar"}
         )
         assert _get_params(client)["foo"] == "bar"
 
@@ -267,7 +264,7 @@ class TestTractorbeam:
 
     def test_client_timeout_option(self) -> None:
         client = Tractorbeam(
-            base_url=base_url, bearer_token=bearer_token, _strict_response_validation=True, timeout=httpx.Timeout(0)
+            base_url=base_url, api_token=api_token, _strict_response_validation=True, timeout=httpx.Timeout(0)
         )
 
         request = client._build_request(FinalRequestOptions(method="get", url="/foo"))
@@ -278,7 +275,7 @@ class TestTractorbeam:
         # custom timeout given to the httpx client should be used
         with httpx.Client(timeout=None) as http_client:
             client = Tractorbeam(
-                base_url=base_url, bearer_token=bearer_token, _strict_response_validation=True, http_client=http_client
+                base_url=base_url, api_token=api_token, _strict_response_validation=True, http_client=http_client
             )
 
             request = client._build_request(FinalRequestOptions(method="get", url="/foo"))
@@ -288,7 +285,7 @@ class TestTractorbeam:
         # no timeout given to the httpx client should not use the httpx default
         with httpx.Client() as http_client:
             client = Tractorbeam(
-                base_url=base_url, bearer_token=bearer_token, _strict_response_validation=True, http_client=http_client
+                base_url=base_url, api_token=api_token, _strict_response_validation=True, http_client=http_client
             )
 
             request = client._build_request(FinalRequestOptions(method="get", url="/foo"))
@@ -298,7 +295,7 @@ class TestTractorbeam:
         # explicitly passing the default timeout currently results in it being ignored
         with httpx.Client(timeout=HTTPX_DEFAULT_TIMEOUT) as http_client:
             client = Tractorbeam(
-                base_url=base_url, bearer_token=bearer_token, _strict_response_validation=True, http_client=http_client
+                base_url=base_url, api_token=api_token, _strict_response_validation=True, http_client=http_client
             )
 
             request = client._build_request(FinalRequestOptions(method="get", url="/foo"))
@@ -310,17 +307,14 @@ class TestTractorbeam:
             async with httpx.AsyncClient() as http_client:
                 Tractorbeam(
                     base_url=base_url,
-                    bearer_token=bearer_token,
+                    api_token=api_token,
                     _strict_response_validation=True,
                     http_client=cast(Any, http_client),
                 )
 
     def test_default_headers_option(self) -> None:
         client = Tractorbeam(
-            base_url=base_url,
-            bearer_token=bearer_token,
-            _strict_response_validation=True,
-            default_headers={"X-Foo": "bar"},
+            base_url=base_url, api_token=api_token, _strict_response_validation=True, default_headers={"X-Foo": "bar"}
         )
         request = client._build_request(FinalRequestOptions(method="get", url="/foo"))
         assert request.headers.get("x-foo") == "bar"
@@ -328,7 +322,7 @@ class TestTractorbeam:
 
         client2 = Tractorbeam(
             base_url=base_url,
-            bearer_token=bearer_token,
+            api_token=api_token,
             _strict_response_validation=True,
             default_headers={
                 "X-Foo": "stainless",
@@ -340,19 +334,19 @@ class TestTractorbeam:
         assert request.headers.get("x-stainless-lang") == "my-overriding-header"
 
     def test_validate_headers(self) -> None:
-        client = Tractorbeam(base_url=base_url, bearer_token=bearer_token, _strict_response_validation=True)
+        client = Tractorbeam(base_url=base_url, api_token=api_token, _strict_response_validation=True)
         request = client._build_request(FinalRequestOptions(method="get", url="/foo"))
-        assert request.headers.get("Authorization") == f"Bearer {bearer_token}"
+        assert request.headers.get("Authorization") == f"Bearer {api_token}"
 
         with pytest.raises(TractorbeamError):
             with update_env(**{"API_TOKEN": Omit()}):
-                client2 = Tractorbeam(base_url=base_url, bearer_token=None, _strict_response_validation=True)
+                client2 = Tractorbeam(base_url=base_url, api_token=None, _strict_response_validation=True)
             _ = client2
 
     def test_default_query_option(self) -> None:
         client = Tractorbeam(
             base_url=base_url,
-            bearer_token=bearer_token,
+            api_token=api_token,
             _strict_response_validation=True,
             default_query={"query_param": "bar"},
         )
@@ -555,7 +549,7 @@ class TestTractorbeam:
 
     def test_base_url_setter(self) -> None:
         client = Tractorbeam(
-            base_url="https://example.com/from_init", bearer_token=bearer_token, _strict_response_validation=True
+            base_url="https://example.com/from_init", api_token=api_token, _strict_response_validation=True
         )
         assert client.base_url == "https://example.com/from_init/"
 
@@ -565,20 +559,18 @@ class TestTractorbeam:
 
     def test_base_url_env(self) -> None:
         with update_env(TRACTORBEAM_BASE_URL="http://localhost:5000/from/env"):
-            client = Tractorbeam(bearer_token=bearer_token, _strict_response_validation=True)
+            client = Tractorbeam(api_token=api_token, _strict_response_validation=True)
             assert client.base_url == "http://localhost:5000/from/env/"
 
     @pytest.mark.parametrize(
         "client",
         [
             Tractorbeam(
-                base_url="http://localhost:5000/custom/path/",
-                bearer_token=bearer_token,
-                _strict_response_validation=True,
+                base_url="http://localhost:5000/custom/path/", api_token=api_token, _strict_response_validation=True
             ),
             Tractorbeam(
                 base_url="http://localhost:5000/custom/path/",
-                bearer_token=bearer_token,
+                api_token=api_token,
                 _strict_response_validation=True,
                 http_client=httpx.Client(),
             ),
@@ -599,13 +591,11 @@ class TestTractorbeam:
         "client",
         [
             Tractorbeam(
-                base_url="http://localhost:5000/custom/path/",
-                bearer_token=bearer_token,
-                _strict_response_validation=True,
+                base_url="http://localhost:5000/custom/path/", api_token=api_token, _strict_response_validation=True
             ),
             Tractorbeam(
                 base_url="http://localhost:5000/custom/path/",
-                bearer_token=bearer_token,
+                api_token=api_token,
                 _strict_response_validation=True,
                 http_client=httpx.Client(),
             ),
@@ -626,13 +616,11 @@ class TestTractorbeam:
         "client",
         [
             Tractorbeam(
-                base_url="http://localhost:5000/custom/path/",
-                bearer_token=bearer_token,
-                _strict_response_validation=True,
+                base_url="http://localhost:5000/custom/path/", api_token=api_token, _strict_response_validation=True
             ),
             Tractorbeam(
                 base_url="http://localhost:5000/custom/path/",
-                bearer_token=bearer_token,
+                api_token=api_token,
                 _strict_response_validation=True,
                 http_client=httpx.Client(),
             ),
@@ -650,7 +638,7 @@ class TestTractorbeam:
         assert request.url == "https://myapi.com/foo"
 
     def test_copied_client_does_not_close_http(self) -> None:
-        client = Tractorbeam(base_url=base_url, bearer_token=bearer_token, _strict_response_validation=True)
+        client = Tractorbeam(base_url=base_url, api_token=api_token, _strict_response_validation=True)
         assert not client.is_closed()
 
         copied = client.copy()
@@ -661,7 +649,7 @@ class TestTractorbeam:
         assert not client.is_closed()
 
     def test_client_context_manager(self) -> None:
-        client = Tractorbeam(base_url=base_url, bearer_token=bearer_token, _strict_response_validation=True)
+        client = Tractorbeam(base_url=base_url, api_token=api_token, _strict_response_validation=True)
         with client as c2:
             assert c2 is client
             assert not c2.is_closed()
@@ -683,10 +671,7 @@ class TestTractorbeam:
     def test_client_max_retries_validation(self) -> None:
         with pytest.raises(TypeError, match=r"max_retries cannot be None"):
             Tractorbeam(
-                base_url=base_url,
-                bearer_token=bearer_token,
-                _strict_response_validation=True,
-                max_retries=cast(Any, None),
+                base_url=base_url, api_token=api_token, _strict_response_validation=True, max_retries=cast(Any, None)
             )
 
     @pytest.mark.respx(base_url=base_url)
@@ -696,12 +681,12 @@ class TestTractorbeam:
 
         respx_mock.get("/foo").mock(return_value=httpx.Response(200, text="my-custom-format"))
 
-        strict_client = Tractorbeam(base_url=base_url, bearer_token=bearer_token, _strict_response_validation=True)
+        strict_client = Tractorbeam(base_url=base_url, api_token=api_token, _strict_response_validation=True)
 
         with pytest.raises(APIResponseValidationError):
             strict_client.get("/foo", cast_to=Model)
 
-        client = Tractorbeam(base_url=base_url, bearer_token=bearer_token, _strict_response_validation=False)
+        client = Tractorbeam(base_url=base_url, api_token=api_token, _strict_response_validation=False)
 
         response = client.get("/foo", cast_to=Model)
         assert isinstance(response, str)  # type: ignore[unreachable]
@@ -729,7 +714,7 @@ class TestTractorbeam:
     )
     @mock.patch("time.time", mock.MagicMock(return_value=1696004797))
     def test_parse_retry_after_header(self, remaining_retries: int, retry_after: str, timeout: float) -> None:
-        client = Tractorbeam(base_url=base_url, bearer_token=bearer_token, _strict_response_validation=True)
+        client = Tractorbeam(base_url=base_url, api_token=api_token, _strict_response_validation=True)
 
         headers = httpx.Headers({"retry-after": retry_after})
         options = FinalRequestOptions(method="get", url="/foo", max_retries=3)
@@ -739,11 +724,11 @@ class TestTractorbeam:
     @mock.patch("tractorbeam._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
     @pytest.mark.respx(base_url=base_url)
     def test_retrying_timeout_errors_doesnt_leak(self, respx_mock: MockRouter) -> None:
-        respx_mock.post("/api-tokens").mock(side_effect=httpx.TimeoutException("Test timeout error"))
+        respx_mock.post("/documents").mock(side_effect=httpx.TimeoutException("Test timeout error"))
 
         with pytest.raises(APITimeoutError):
             self.client.post(
-                "/api-tokens",
+                "/documents",
                 body=cast(object, dict(name="REPLACE_ME")),
                 cast_to=httpx.Response,
                 options={"headers": {RAW_RESPONSE_HEADER: "stream"}},
@@ -754,11 +739,11 @@ class TestTractorbeam:
     @mock.patch("tractorbeam._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
     @pytest.mark.respx(base_url=base_url)
     def test_retrying_status_errors_doesnt_leak(self, respx_mock: MockRouter) -> None:
-        respx_mock.post("/api-tokens").mock(return_value=httpx.Response(500))
+        respx_mock.post("/documents").mock(return_value=httpx.Response(500))
 
         with pytest.raises(APIStatusError):
             self.client.post(
-                "/api-tokens",
+                "/documents",
                 body=cast(object, dict(name="REPLACE_ME")),
                 cast_to=httpx.Response,
                 options={"headers": {RAW_RESPONSE_HEADER: "stream"}},
@@ -790,9 +775,9 @@ class TestTractorbeam:
                 return httpx.Response(500)
             return httpx.Response(200)
 
-        respx_mock.post("/api-tokens").mock(side_effect=retry_handler)
+        respx_mock.post("/documents").mock(side_effect=retry_handler)
 
-        response = client.api_tokens.with_raw_response.create(name="my_api_token")
+        response = client.documents.with_raw_response.create(name="my_document.txt")
 
         assert response.retries_taken == failures_before_success
         assert int(response.http_request.headers.get("x-stainless-retry-count")) == failures_before_success
@@ -814,10 +799,10 @@ class TestTractorbeam:
                 return httpx.Response(500)
             return httpx.Response(200)
 
-        respx_mock.post("/api-tokens").mock(side_effect=retry_handler)
+        respx_mock.post("/documents").mock(side_effect=retry_handler)
 
-        response = client.api_tokens.with_raw_response.create(
-            name="my_api_token", extra_headers={"x-stainless-retry-count": Omit()}
+        response = client.documents.with_raw_response.create(
+            name="my_document.txt", extra_headers={"x-stainless-retry-count": Omit()}
         )
 
         assert len(response.http_request.headers.get_list("x-stainless-retry-count")) == 0
@@ -839,17 +824,17 @@ class TestTractorbeam:
                 return httpx.Response(500)
             return httpx.Response(200)
 
-        respx_mock.post("/api-tokens").mock(side_effect=retry_handler)
+        respx_mock.post("/documents").mock(side_effect=retry_handler)
 
-        response = client.api_tokens.with_raw_response.create(
-            name="my_api_token", extra_headers={"x-stainless-retry-count": "42"}
+        response = client.documents.with_raw_response.create(
+            name="my_document.txt", extra_headers={"x-stainless-retry-count": "42"}
         )
 
         assert response.http_request.headers.get("x-stainless-retry-count") == "42"
 
 
 class TestAsyncTractorbeam:
-    client = AsyncTractorbeam(base_url=base_url, bearer_token=bearer_token, _strict_response_validation=True)
+    client = AsyncTractorbeam(base_url=base_url, api_token=api_token, _strict_response_validation=True)
 
     @pytest.mark.respx(base_url=base_url)
     @pytest.mark.asyncio
@@ -877,9 +862,9 @@ class TestAsyncTractorbeam:
         copied = self.client.copy()
         assert id(copied) != id(self.client)
 
-        copied = self.client.copy(bearer_token="another My Bearer Token")
-        assert copied.bearer_token == "another My Bearer Token"
-        assert self.client.bearer_token == "My Bearer Token"
+        copied = self.client.copy(api_token="another My API Token")
+        assert copied.api_token == "another My API Token"
+        assert self.client.api_token == "My API Token"
 
     def test_copy_default_options(self) -> None:
         # options that have a default are overridden correctly
@@ -899,10 +884,7 @@ class TestAsyncTractorbeam:
 
     def test_copy_default_headers(self) -> None:
         client = AsyncTractorbeam(
-            base_url=base_url,
-            bearer_token=bearer_token,
-            _strict_response_validation=True,
-            default_headers={"X-Foo": "bar"},
+            base_url=base_url, api_token=api_token, _strict_response_validation=True, default_headers={"X-Foo": "bar"}
         )
         assert client.default_headers["X-Foo"] == "bar"
 
@@ -936,7 +918,7 @@ class TestAsyncTractorbeam:
 
     def test_copy_default_query(self) -> None:
         client = AsyncTractorbeam(
-            base_url=base_url, bearer_token=bearer_token, _strict_response_validation=True, default_query={"foo": "bar"}
+            base_url=base_url, api_token=api_token, _strict_response_validation=True, default_query={"foo": "bar"}
         )
         assert _get_params(client)["foo"] == "bar"
 
@@ -1061,7 +1043,7 @@ class TestAsyncTractorbeam:
 
     async def test_client_timeout_option(self) -> None:
         client = AsyncTractorbeam(
-            base_url=base_url, bearer_token=bearer_token, _strict_response_validation=True, timeout=httpx.Timeout(0)
+            base_url=base_url, api_token=api_token, _strict_response_validation=True, timeout=httpx.Timeout(0)
         )
 
         request = client._build_request(FinalRequestOptions(method="get", url="/foo"))
@@ -1072,7 +1054,7 @@ class TestAsyncTractorbeam:
         # custom timeout given to the httpx client should be used
         async with httpx.AsyncClient(timeout=None) as http_client:
             client = AsyncTractorbeam(
-                base_url=base_url, bearer_token=bearer_token, _strict_response_validation=True, http_client=http_client
+                base_url=base_url, api_token=api_token, _strict_response_validation=True, http_client=http_client
             )
 
             request = client._build_request(FinalRequestOptions(method="get", url="/foo"))
@@ -1082,7 +1064,7 @@ class TestAsyncTractorbeam:
         # no timeout given to the httpx client should not use the httpx default
         async with httpx.AsyncClient() as http_client:
             client = AsyncTractorbeam(
-                base_url=base_url, bearer_token=bearer_token, _strict_response_validation=True, http_client=http_client
+                base_url=base_url, api_token=api_token, _strict_response_validation=True, http_client=http_client
             )
 
             request = client._build_request(FinalRequestOptions(method="get", url="/foo"))
@@ -1092,7 +1074,7 @@ class TestAsyncTractorbeam:
         # explicitly passing the default timeout currently results in it being ignored
         async with httpx.AsyncClient(timeout=HTTPX_DEFAULT_TIMEOUT) as http_client:
             client = AsyncTractorbeam(
-                base_url=base_url, bearer_token=bearer_token, _strict_response_validation=True, http_client=http_client
+                base_url=base_url, api_token=api_token, _strict_response_validation=True, http_client=http_client
             )
 
             request = client._build_request(FinalRequestOptions(method="get", url="/foo"))
@@ -1104,17 +1086,14 @@ class TestAsyncTractorbeam:
             with httpx.Client() as http_client:
                 AsyncTractorbeam(
                     base_url=base_url,
-                    bearer_token=bearer_token,
+                    api_token=api_token,
                     _strict_response_validation=True,
                     http_client=cast(Any, http_client),
                 )
 
     def test_default_headers_option(self) -> None:
         client = AsyncTractorbeam(
-            base_url=base_url,
-            bearer_token=bearer_token,
-            _strict_response_validation=True,
-            default_headers={"X-Foo": "bar"},
+            base_url=base_url, api_token=api_token, _strict_response_validation=True, default_headers={"X-Foo": "bar"}
         )
         request = client._build_request(FinalRequestOptions(method="get", url="/foo"))
         assert request.headers.get("x-foo") == "bar"
@@ -1122,7 +1101,7 @@ class TestAsyncTractorbeam:
 
         client2 = AsyncTractorbeam(
             base_url=base_url,
-            bearer_token=bearer_token,
+            api_token=api_token,
             _strict_response_validation=True,
             default_headers={
                 "X-Foo": "stainless",
@@ -1134,19 +1113,19 @@ class TestAsyncTractorbeam:
         assert request.headers.get("x-stainless-lang") == "my-overriding-header"
 
     def test_validate_headers(self) -> None:
-        client = AsyncTractorbeam(base_url=base_url, bearer_token=bearer_token, _strict_response_validation=True)
+        client = AsyncTractorbeam(base_url=base_url, api_token=api_token, _strict_response_validation=True)
         request = client._build_request(FinalRequestOptions(method="get", url="/foo"))
-        assert request.headers.get("Authorization") == f"Bearer {bearer_token}"
+        assert request.headers.get("Authorization") == f"Bearer {api_token}"
 
         with pytest.raises(TractorbeamError):
             with update_env(**{"API_TOKEN": Omit()}):
-                client2 = AsyncTractorbeam(base_url=base_url, bearer_token=None, _strict_response_validation=True)
+                client2 = AsyncTractorbeam(base_url=base_url, api_token=None, _strict_response_validation=True)
             _ = client2
 
     def test_default_query_option(self) -> None:
         client = AsyncTractorbeam(
             base_url=base_url,
-            bearer_token=bearer_token,
+            api_token=api_token,
             _strict_response_validation=True,
             default_query={"query_param": "bar"},
         )
@@ -1349,7 +1328,7 @@ class TestAsyncTractorbeam:
 
     def test_base_url_setter(self) -> None:
         client = AsyncTractorbeam(
-            base_url="https://example.com/from_init", bearer_token=bearer_token, _strict_response_validation=True
+            base_url="https://example.com/from_init", api_token=api_token, _strict_response_validation=True
         )
         assert client.base_url == "https://example.com/from_init/"
 
@@ -1359,20 +1338,18 @@ class TestAsyncTractorbeam:
 
     def test_base_url_env(self) -> None:
         with update_env(TRACTORBEAM_BASE_URL="http://localhost:5000/from/env"):
-            client = AsyncTractorbeam(bearer_token=bearer_token, _strict_response_validation=True)
+            client = AsyncTractorbeam(api_token=api_token, _strict_response_validation=True)
             assert client.base_url == "http://localhost:5000/from/env/"
 
     @pytest.mark.parametrize(
         "client",
         [
             AsyncTractorbeam(
-                base_url="http://localhost:5000/custom/path/",
-                bearer_token=bearer_token,
-                _strict_response_validation=True,
+                base_url="http://localhost:5000/custom/path/", api_token=api_token, _strict_response_validation=True
             ),
             AsyncTractorbeam(
                 base_url="http://localhost:5000/custom/path/",
-                bearer_token=bearer_token,
+                api_token=api_token,
                 _strict_response_validation=True,
                 http_client=httpx.AsyncClient(),
             ),
@@ -1393,13 +1370,11 @@ class TestAsyncTractorbeam:
         "client",
         [
             AsyncTractorbeam(
-                base_url="http://localhost:5000/custom/path/",
-                bearer_token=bearer_token,
-                _strict_response_validation=True,
+                base_url="http://localhost:5000/custom/path/", api_token=api_token, _strict_response_validation=True
             ),
             AsyncTractorbeam(
                 base_url="http://localhost:5000/custom/path/",
-                bearer_token=bearer_token,
+                api_token=api_token,
                 _strict_response_validation=True,
                 http_client=httpx.AsyncClient(),
             ),
@@ -1420,13 +1395,11 @@ class TestAsyncTractorbeam:
         "client",
         [
             AsyncTractorbeam(
-                base_url="http://localhost:5000/custom/path/",
-                bearer_token=bearer_token,
-                _strict_response_validation=True,
+                base_url="http://localhost:5000/custom/path/", api_token=api_token, _strict_response_validation=True
             ),
             AsyncTractorbeam(
                 base_url="http://localhost:5000/custom/path/",
-                bearer_token=bearer_token,
+                api_token=api_token,
                 _strict_response_validation=True,
                 http_client=httpx.AsyncClient(),
             ),
@@ -1444,7 +1417,7 @@ class TestAsyncTractorbeam:
         assert request.url == "https://myapi.com/foo"
 
     async def test_copied_client_does_not_close_http(self) -> None:
-        client = AsyncTractorbeam(base_url=base_url, bearer_token=bearer_token, _strict_response_validation=True)
+        client = AsyncTractorbeam(base_url=base_url, api_token=api_token, _strict_response_validation=True)
         assert not client.is_closed()
 
         copied = client.copy()
@@ -1456,7 +1429,7 @@ class TestAsyncTractorbeam:
         assert not client.is_closed()
 
     async def test_client_context_manager(self) -> None:
-        client = AsyncTractorbeam(base_url=base_url, bearer_token=bearer_token, _strict_response_validation=True)
+        client = AsyncTractorbeam(base_url=base_url, api_token=api_token, _strict_response_validation=True)
         async with client as c2:
             assert c2 is client
             assert not c2.is_closed()
@@ -1479,10 +1452,7 @@ class TestAsyncTractorbeam:
     async def test_client_max_retries_validation(self) -> None:
         with pytest.raises(TypeError, match=r"max_retries cannot be None"):
             AsyncTractorbeam(
-                base_url=base_url,
-                bearer_token=bearer_token,
-                _strict_response_validation=True,
-                max_retries=cast(Any, None),
+                base_url=base_url, api_token=api_token, _strict_response_validation=True, max_retries=cast(Any, None)
             )
 
     @pytest.mark.respx(base_url=base_url)
@@ -1493,12 +1463,12 @@ class TestAsyncTractorbeam:
 
         respx_mock.get("/foo").mock(return_value=httpx.Response(200, text="my-custom-format"))
 
-        strict_client = AsyncTractorbeam(base_url=base_url, bearer_token=bearer_token, _strict_response_validation=True)
+        strict_client = AsyncTractorbeam(base_url=base_url, api_token=api_token, _strict_response_validation=True)
 
         with pytest.raises(APIResponseValidationError):
             await strict_client.get("/foo", cast_to=Model)
 
-        client = AsyncTractorbeam(base_url=base_url, bearer_token=bearer_token, _strict_response_validation=False)
+        client = AsyncTractorbeam(base_url=base_url, api_token=api_token, _strict_response_validation=False)
 
         response = await client.get("/foo", cast_to=Model)
         assert isinstance(response, str)  # type: ignore[unreachable]
@@ -1527,7 +1497,7 @@ class TestAsyncTractorbeam:
     @mock.patch("time.time", mock.MagicMock(return_value=1696004797))
     @pytest.mark.asyncio
     async def test_parse_retry_after_header(self, remaining_retries: int, retry_after: str, timeout: float) -> None:
-        client = AsyncTractorbeam(base_url=base_url, bearer_token=bearer_token, _strict_response_validation=True)
+        client = AsyncTractorbeam(base_url=base_url, api_token=api_token, _strict_response_validation=True)
 
         headers = httpx.Headers({"retry-after": retry_after})
         options = FinalRequestOptions(method="get", url="/foo", max_retries=3)
@@ -1537,11 +1507,11 @@ class TestAsyncTractorbeam:
     @mock.patch("tractorbeam._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
     @pytest.mark.respx(base_url=base_url)
     async def test_retrying_timeout_errors_doesnt_leak(self, respx_mock: MockRouter) -> None:
-        respx_mock.post("/api-tokens").mock(side_effect=httpx.TimeoutException("Test timeout error"))
+        respx_mock.post("/documents").mock(side_effect=httpx.TimeoutException("Test timeout error"))
 
         with pytest.raises(APITimeoutError):
             await self.client.post(
-                "/api-tokens",
+                "/documents",
                 body=cast(object, dict(name="REPLACE_ME")),
                 cast_to=httpx.Response,
                 options={"headers": {RAW_RESPONSE_HEADER: "stream"}},
@@ -1552,11 +1522,11 @@ class TestAsyncTractorbeam:
     @mock.patch("tractorbeam._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
     @pytest.mark.respx(base_url=base_url)
     async def test_retrying_status_errors_doesnt_leak(self, respx_mock: MockRouter) -> None:
-        respx_mock.post("/api-tokens").mock(return_value=httpx.Response(500))
+        respx_mock.post("/documents").mock(return_value=httpx.Response(500))
 
         with pytest.raises(APIStatusError):
             await self.client.post(
-                "/api-tokens",
+                "/documents",
                 body=cast(object, dict(name="REPLACE_ME")),
                 cast_to=httpx.Response,
                 options={"headers": {RAW_RESPONSE_HEADER: "stream"}},
@@ -1589,9 +1559,9 @@ class TestAsyncTractorbeam:
                 return httpx.Response(500)
             return httpx.Response(200)
 
-        respx_mock.post("/api-tokens").mock(side_effect=retry_handler)
+        respx_mock.post("/documents").mock(side_effect=retry_handler)
 
-        response = await client.api_tokens.with_raw_response.create(name="my_api_token")
+        response = await client.documents.with_raw_response.create(name="my_document.txt")
 
         assert response.retries_taken == failures_before_success
         assert int(response.http_request.headers.get("x-stainless-retry-count")) == failures_before_success
@@ -1614,10 +1584,10 @@ class TestAsyncTractorbeam:
                 return httpx.Response(500)
             return httpx.Response(200)
 
-        respx_mock.post("/api-tokens").mock(side_effect=retry_handler)
+        respx_mock.post("/documents").mock(side_effect=retry_handler)
 
-        response = await client.api_tokens.with_raw_response.create(
-            name="my_api_token", extra_headers={"x-stainless-retry-count": Omit()}
+        response = await client.documents.with_raw_response.create(
+            name="my_document.txt", extra_headers={"x-stainless-retry-count": Omit()}
         )
 
         assert len(response.http_request.headers.get_list("x-stainless-retry-count")) == 0
@@ -1640,10 +1610,10 @@ class TestAsyncTractorbeam:
                 return httpx.Response(500)
             return httpx.Response(200)
 
-        respx_mock.post("/api-tokens").mock(side_effect=retry_handler)
+        respx_mock.post("/documents").mock(side_effect=retry_handler)
 
-        response = await client.api_tokens.with_raw_response.create(
-            name="my_api_token", extra_headers={"x-stainless-retry-count": "42"}
+        response = await client.documents.with_raw_response.create(
+            name="my_document.txt", extra_headers={"x-stainless-retry-count": "42"}
         )
 
         assert response.http_request.headers.get("x-stainless-retry-count") == "42"

@@ -2,5 +2,4 @@
 
 from __future__ import annotations
 
-from .document_contents import DocumentContents as DocumentContents
-from .tuple_retrieve_params import TupleRetrieveParams as TupleRetrieveParams
+from .tuple_list_params import TupleListParams as TupleListParams
