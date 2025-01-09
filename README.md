@@ -15,44 +15,55 @@ The REST API documentation can be found on [docs.tractorbeam.com](https://docs.t
 ## Installation
 
 ```sh
-# install from PyPI
-pip install --pre tractorbeam
+# install from this staging repo
+pip install git+ssh://git@github.com/stainless-sdks/tractorbeam-python.git
 ```
+
+> [!NOTE]
+> Once this package is [published to PyPI](https://app.stainlessapi.com/docs/guides/publish), this will become: `pip install --pre tractorbeam`
 
 ## Usage
 
 The full API of this library can be found in [api.md](api.md).
 
 ```python
+import os
 from tractorbeam import Tractorbeam
 
-client = Tractorbeam()
-
-graph = client.graphs.create(
-    body={},
+client = Tractorbeam(
+    bearer_token=os.environ.get("API_TOKEN"),  # This is the default and can be omitted
 )
+
+api_token = client.api_tokens.create(
+    name="REPLACE_ME",
+)
+print(api_token.id)
 ```
 
-While you can provide an `api_key` keyword argument,
+While you can provide a `bearer_token` keyword argument,
 we recommend using [python-dotenv](https://pypi.org/project/python-dotenv/)
-to add `TRACTORBEAM_API_KEY="My API Key"` to your `.env` file
-so that your API Key is not stored in source control.
+to add `API_TOKEN="My Bearer Token"` to your `.env` file
+so that your Bearer Token is not stored in source control.
 
 ## Async usage
 
 Simply import `AsyncTractorbeam` instead of `Tractorbeam` and use `await` with each API call:
 
 ```python
+import os
 import asyncio
 from tractorbeam import AsyncTractorbeam
 
-client = AsyncTractorbeam()
+client = AsyncTractorbeam(
+    bearer_token=os.environ.get("API_TOKEN"),  # This is the default and can be omitted
+)
 
 
 async def main() -> None:
-    graph = await client.graphs.create(
-        body={},
+    api_token = await client.api_tokens.create(
+        name="REPLACE_ME",
     )
+    print(api_token.id)
 
 
 asyncio.run(main())
@@ -85,8 +96,8 @@ from tractorbeam import Tractorbeam
 client = Tractorbeam()
 
 try:
-    client.graphs.create(
-        body={},
+    client.api_tokens.create(
+        name="REPLACE_ME",
     )
 except tractorbeam.APIConnectionError as e:
     print("The server could not be reached")
@@ -130,8 +141,8 @@ client = Tractorbeam(
 )
 
 # Or, configure per-request:
-client.with_options(max_retries=5).graphs.create(
-    body={},
+client.with_options(max_retries=5).api_tokens.create(
+    name="REPLACE_ME",
 )
 ```
 
@@ -155,8 +166,8 @@ client = Tractorbeam(
 )
 
 # Override per-request:
-client.with_options(timeout=5.0).graphs.create(
-    body={},
+client.with_options(timeout=5.0).api_tokens.create(
+    name="REPLACE_ME",
 )
 ```
 
@@ -198,18 +209,18 @@ The "raw" Response object can be accessed by prefixing `.with_raw_response.` to 
 from tractorbeam import Tractorbeam
 
 client = Tractorbeam()
-response = client.graphs.with_raw_response.create(
-    body={},
+response = client.api_tokens.with_raw_response.create(
+    name="REPLACE_ME",
 )
 print(response.headers.get('X-My-Header'))
 
-graph = response.parse()  # get the object that `graphs.create()` would have returned
-print(graph)
+api_token = response.parse()  # get the object that `api_tokens.create()` would have returned
+print(api_token.id)
 ```
 
-These methods return an [`APIResponse`](https://github.com/tractorbeamai/tractorbeam-python/tree/main/src/tractorbeam/_response.py) object.
+These methods return an [`APIResponse`](https://github.com/stainless-sdks/tractorbeam-python/tree/main/src/tractorbeam/_response.py) object.
 
-The async client returns an [`AsyncAPIResponse`](https://github.com/tractorbeamai/tractorbeam-python/tree/main/src/tractorbeam/_response.py) with the same structure, the only difference being `await`able methods for reading the response content.
+The async client returns an [`AsyncAPIResponse`](https://github.com/stainless-sdks/tractorbeam-python/tree/main/src/tractorbeam/_response.py) with the same structure, the only difference being `await`able methods for reading the response content.
 
 #### `.with_streaming_response`
 
@@ -218,8 +229,8 @@ The above interface eagerly reads the full response body when you make the reque
 To stream the response body, use `.with_streaming_response` instead, which requires a context manager and only reads the response body once you call `.read()`, `.text()`, `.json()`, `.iter_bytes()`, `.iter_text()`, `.iter_lines()` or `.parse()`. In the async client, these are async methods.
 
 ```python
-with client.graphs.with_streaming_response.create(
-    body={},
+with client.api_tokens.with_streaming_response.create(
+    name="REPLACE_ME",
 ) as response:
     print(response.headers.get("X-My-Header"))
 
@@ -306,7 +317,7 @@ This package generally follows [SemVer](https://semver.org/spec/v2.0.0.html) con
 
 We take backwards-compatibility seriously and work hard to ensure you can rely on a smooth upgrade experience.
 
-We are keen for your feedback; please open an [issue](https://www.github.com/tractorbeamai/tractorbeam-python/issues) with questions, bugs, or suggestions.
+We are keen for your feedback; please open an [issue](https://www.github.com/stainless-sdks/tractorbeam-python/issues) with questions, bugs, or suggestions.
 
 ### Determining the installed version
 

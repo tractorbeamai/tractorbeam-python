@@ -1,7 +1,7 @@
 [project]
 name = "tractorbeam"
 version = "0.0.1-alpha.0"
-description = "The official Python library for the Tractorbeam API"
+description = "The official Python library for the tractorbeam API"
 dynamic = ["readme"]
 license = "Apache-2.0"
 authors = [
@@ -34,8 +34,8 @@ classifiers = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/tractorbeamai/tractorbeam-python"
-Repository = "https://github.com/tractorbeamai/tractorbeam-python"
+Homepage = "https://github.com/stainless-sdks/tractorbeam-python"
+Repository = "https://github.com/stainless-sdks/tractorbeam-python"
 
 
 
@@ -122,7 +122,7 @@ path = "README.md"
 [[tool.hatch.metadata.hooks.fancy-pypi-readme.substitutions]]
 # replace relative links with absolute links
 pattern = '\[(.+?)\]\(((?!https?://)\S+?)\)'
-replacement = '[\1](https://github.com/tractorbeamai/tractorbeam-python/tree/main/\g<2>)'
+replacement = '[\1](https://github.com/stainless-sdks/tractorbeam-python/tree/main/\g<2>)'
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

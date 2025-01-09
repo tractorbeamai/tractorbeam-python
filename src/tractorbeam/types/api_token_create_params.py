@@ -4,8 +4,9 @@ from __future__ import annotations
 
 from typing_extensions import Required, TypedDict
 
-__all__ = ["GraphCreateParams"]
+__all__ = ["APITokenCreateParams"]
 
 
-class GraphCreateParams(TypedDict, total=False):
+class APITokenCreateParams(TypedDict, total=False):
     name: Required[str]
+    """The name that will be used to identify the API token."""

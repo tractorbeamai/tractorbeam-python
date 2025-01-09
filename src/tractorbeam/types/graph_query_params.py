@@ -4,8 +4,10 @@ from __future__ import annotations
 
 from typing_extensions import Required, TypedDict
 
-__all__ = ["GraphCreateParams"]
+__all__ = ["GraphQueryParams"]
 
 
-class GraphCreateParams(TypedDict, total=False):
-    name: Required[str]
+class GraphQueryParams(TypedDict, total=False):
+    owner: Required[str]
+
+    sparql: Required[str]
