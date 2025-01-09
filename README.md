@@ -31,19 +31,19 @@ import os
 from tractorbeam import Tractorbeam
 
 client = Tractorbeam(
-    bearer_token=os.environ.get("API_TOKEN"),  # This is the default and can be omitted
+    api_token=os.environ.get("API_TOKEN"),  # This is the default and can be omitted
 )
 
-api_token = client.api_tokens.create(
+document = client.documents.create(
     name="REPLACE_ME",
 )
-print(api_token.id)
+print(document.id)
 ```
 
-While you can provide a `bearer_token` keyword argument,
+While you can provide a `api_token` keyword argument,
 we recommend using [python-dotenv](https://pypi.org/project/python-dotenv/)
-to add `API_TOKEN="My Bearer Token"` to your `.env` file
-so that your Bearer Token is not stored in source control.
+to add `API_TOKEN="My API Token"` to your `.env` file
+so that your API Token is not stored in source control.
 
 ## Async usage
 
@@ -55,15 +55,15 @@ import asyncio
 from tractorbeam import AsyncTractorbeam
 
 client = AsyncTractorbeam(
-    bearer_token=os.environ.get("API_TOKEN"),  # This is the default and can be omitted
+    api_token=os.environ.get("API_TOKEN"),  # This is the default and can be omitted
 )
 
 
 async def main() -> None:
-    api_token = await client.api_tokens.create(
+    document = await client.documents.create(
         name="REPLACE_ME",
     )
-    print(api_token.id)
+    print(document.id)
 
 
 asyncio.run(main())
@@ -96,7 +96,7 @@ from tractorbeam import Tractorbeam
 client = Tractorbeam()
 
 try:
-    client.api_tokens.create(
+    client.documents.create(
         name="REPLACE_ME",
     )
 except tractorbeam.APIConnectionError as e:
@@ -141,7 +141,7 @@ client = Tractorbeam(
 )
 
 # Or, configure per-request:
-client.with_options(max_retries=5).api_tokens.create(
+client.with_options(max_retries=5).documents.create(
     name="REPLACE_ME",
 )
 ```
@@ -166,7 +166,7 @@ client = Tractorbeam(
 )
 
 # Override per-request:
-client.with_options(timeout=5.0).api_tokens.create(
+client.with_options(timeout=5.0).documents.create(
     name="REPLACE_ME",
 )
 ```
@@ -209,13 +209,13 @@ The "raw" Response object can be accessed by prefixing `.with_raw_response.` to 
 from tractorbeam import Tractorbeam
 
 client = Tractorbeam()
-response = client.api_tokens.with_raw_response.create(
+response = client.documents.with_raw_response.create(
     name="REPLACE_ME",
 )
 print(response.headers.get('X-My-Header'))
 
-api_token = response.parse()  # get the object that `api_tokens.create()` would have returned
-print(api_token.id)
+document = response.parse()  # get the object that `documents.create()` would have returned
+print(document.id)
 ```
 
 These methods return an [`APIResponse`](https://github.com/stainless-sdks/tractorbeam-python/tree/main/src/tractorbeam/_response.py) object.
@@ -229,7 +229,7 @@ The above interface eagerly reads the full response body when you make the reque
 To stream the response body, use `.with_streaming_response` instead, which requires a context manager and only reads the response body once you call `.read()`, `.text()`, `.json()`, `.iter_bytes()`, `.iter_text()`, `.iter_lines()` or `.parse()`. In the async client, these are async methods.
 
 ```python
-with client.api_tokens.with_streaming_response.create(
+with client.documents.with_streaming_response.create(
     name="REPLACE_ME",
 ) as response:
     print(response.headers.get("X-My-Header"))

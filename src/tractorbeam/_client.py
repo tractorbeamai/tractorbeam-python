@@ -3,16 +3,20 @@
 from __future__ import annotations
 
 import os
-from typing import Any, Union, Mapping
+from typing import Any, List, Union, Mapping
 from typing_extensions import Self, override
 
 import httpx
 
 from . import _exceptions
 from ._qs import Querystring
+from .types import client_query_params
 from ._types import (
     NOT_GIVEN,
+    Body,
     Omit,
+    Query,
+    Headers,
     Timeout,
     NotGiven,
     Transport,
@@ -21,18 +25,29 @@ from ._types import (
 )
 from ._utils import (
     is_given,
+    maybe_transform,
     get_async_library,
+    async_maybe_transform,
 )
 from ._version import __version__
-from .resources import graphs, health, queries, api_tokens
+from ._response import (
+    to_raw_response_wrapper,
+    to_streamed_response_wrapper,
+    async_to_raw_response_wrapper,
+    async_to_streamed_response_wrapper,
+)
+from .resources import graphs, queries, api_tokens
 from ._streaming import Stream as Stream, AsyncStream as AsyncStream
 from ._exceptions import APIStatusError, TractorbeamError
 from ._base_client import (
     DEFAULT_MAX_RETRIES,
     SyncAPIClient,
     AsyncAPIClient,
+    make_request_options,
 )
 from .resources.documents import documents
+from .types.query_response import QueryResponse
+from .types.health_check_response import HealthCheckResponse
 
 __all__ = [
     "Timeout",
@@ -50,18 +65,17 @@ class Tractorbeam(SyncAPIClient):
     api_tokens: api_tokens.APITokensResource
     documents: documents.DocumentsResource
     graphs: graphs.GraphsResource
-    health: health.HealthResource
     queries: queries.QueriesResource
     with_raw_response: TractorbeamWithRawResponse
     with_streaming_response: TractorbeamWithStreamedResponse
 
     # client options
-    bearer_token: str
+    api_token: str
 
     def __init__(
         self,
         *,
-        bearer_token: str | None = None,
+        api_token: str | None = None,
         base_url: str | httpx.URL | None = None,
         timeout: Union[float, Timeout, None, NotGiven] = NOT_GIVEN,
         max_retries: int = DEFAULT_MAX_RETRIES,
@@ -83,15 +97,15 @@ class Tractorbeam(SyncAPIClient):
     ) -> None:
         """Construct a new synchronous tractorbeam client instance.
 
-        This automatically infers the `bearer_token` argument from the `API_TOKEN` environment variable if it is not provided.
+        This automatically infers the `api_token` argument from the `API_TOKEN` environment variable if it is not provided.
         """
-        if bearer_token is None:
-            bearer_token = os.environ.get("API_TOKEN")
-        if bearer_token is None:
+        if api_token is None:
+            api_token = os.environ.get("API_TOKEN")
+        if api_token is None:
             raise TractorbeamError(
-                "The bearer_token client option must be set either by passing bearer_token to the client or by setting the API_TOKEN environment variable"
+                "The api_token client option must be set either by passing api_token to the client or by setting the API_TOKEN environment variable"
             )
-        self.bearer_token = bearer_token
+        self.api_token = api_token
 
         if base_url is None:
             base_url = os.environ.get("TRACTORBEAM_BASE_URL")
@@ -112,7 +126,6 @@ class Tractorbeam(SyncAPIClient):
         self.api_tokens = api_tokens.APITokensResource(self)
         self.documents = documents.DocumentsResource(self)
         self.graphs = graphs.GraphsResource(self)
-        self.health = health.HealthResource(self)
         self.queries = queries.QueriesResource(self)
         self.with_raw_response = TractorbeamWithRawResponse(self)
         self.with_streaming_response = TractorbeamWithStreamedResponse(self)
@@ -125,8 +138,8 @@ class Tractorbeam(SyncAPIClient):
     @property
     @override
     def auth_headers(self) -> dict[str, str]:
-        bearer_token = self.bearer_token
-        return {"Authorization": f"Bearer {bearer_token}"}
+        api_token = self.api_token
+        return {"Authorization": f"Bearer {api_token}"}
 
     @property
     @override
@@ -140,7 +153,7 @@ class Tractorbeam(SyncAPIClient):
     def copy(
         self,
         *,
-        bearer_token: str | None = None,
+        api_token: str | None = None,
         base_url: str | httpx.URL | None = None,
         timeout: float | Timeout | None | NotGiven = NOT_GIVEN,
         http_client: httpx.Client | None = None,
@@ -174,7 +187,7 @@ class Tractorbeam(SyncAPIClient):
 
         http_client = http_client or self._client
         return self.__class__(
-            bearer_token=bearer_token or self.bearer_token,
+            api_token=api_token or self.api_token,
             base_url=base_url or self.base_url,
             timeout=self.timeout if isinstance(timeout, NotGiven) else timeout,
             http_client=http_client,
@@ -187,6 +200,70 @@ class Tractorbeam(SyncAPIClient):
     # Alias for `copy` for nicer inline usage, e.g.
     # client.with_options(timeout=10).foo.create(...)
     with_options = copy
+
+    def health_check(
+        self,
+        *,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+    ) -> HealthCheckResponse:
+        """This is a simple health check that does not require authentication.
+
+        It is used
+        to check if the server is running and healthy.
+        """
+        return self.get(
+            "/health",
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
+            cast_to=HealthCheckResponse,
+        )
+
+    def query(
+        self,
+        *,
+        depth: int,
+        graph_names: List[str],
+        query: str,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+    ) -> QueryResponse:
+        """
+        Execute a natural language query across multiple graphs.
+
+        Args:
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        return self.post(
+            "/query",
+            body=maybe_transform(
+                {
+                    "depth": depth,
+                    "graph_names": graph_names,
+                    "query": query,
+                },
+                client_query_params.ClientQueryParams,
+            ),
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
+            cast_to=QueryResponse,
+        )
 
     @override
     def _make_status_error(
@@ -226,18 +303,17 @@ class AsyncTractorbeam(AsyncAPIClient):
     api_tokens: api_tokens.AsyncAPITokensResource
     documents: documents.AsyncDocumentsResource
     graphs: graphs.AsyncGraphsResource
-    health: health.AsyncHealthResource
     queries: queries.AsyncQueriesResource
     with_raw_response: AsyncTractorbeamWithRawResponse
     with_streaming_response: AsyncTractorbeamWithStreamedResponse
 
     # client options
-    bearer_token: str
+    api_token: str
 
     def __init__(
         self,
         *,
-        bearer_token: str | None = None,
+        api_token: str | None = None,
         base_url: str | httpx.URL | None = None,
         timeout: Union[float, Timeout, None, NotGiven] = NOT_GIVEN,
         max_retries: int = DEFAULT_MAX_RETRIES,
@@ -259,15 +335,15 @@ class AsyncTractorbeam(AsyncAPIClient):
     ) -> None:
         """Construct a new async tractorbeam client instance.
 
-        This automatically infers the `bearer_token` argument from the `API_TOKEN` environment variable if it is not provided.
+        This automatically infers the `api_token` argument from the `API_TOKEN` environment variable if it is not provided.
         """
-        if bearer_token is None:
-            bearer_token = os.environ.get("API_TOKEN")
-        if bearer_token is None:
+        if api_token is None:
+            api_token = os.environ.get("API_TOKEN")
+        if api_token is None:
             raise TractorbeamError(
-                "The bearer_token client option must be set either by passing bearer_token to the client or by setting the API_TOKEN environment variable"
+                "The api_token client option must be set either by passing api_token to the client or by setting the API_TOKEN environment variable"
             )
-        self.bearer_token = bearer_token
+        self.api_token = api_token
 
         if base_url is None:
             base_url = os.environ.get("TRACTORBEAM_BASE_URL")
@@ -288,7 +364,6 @@ class AsyncTractorbeam(AsyncAPIClient):
         self.api_tokens = api_tokens.AsyncAPITokensResource(self)
         self.documents = documents.AsyncDocumentsResource(self)
         self.graphs = graphs.AsyncGraphsResource(self)
-        self.health = health.AsyncHealthResource(self)
         self.queries = queries.AsyncQueriesResource(self)
         self.with_raw_response = AsyncTractorbeamWithRawResponse(self)
         self.with_streaming_response = AsyncTractorbeamWithStreamedResponse(self)
@@ -301,8 +376,8 @@ class AsyncTractorbeam(AsyncAPIClient):
     @property
     @override
     def auth_headers(self) -> dict[str, str]:
-        bearer_token = self.bearer_token
-        return {"Authorization": f"Bearer {bearer_token}"}
+        api_token = self.api_token
+        return {"Authorization": f"Bearer {api_token}"}
 
     @property
     @override
@@ -316,7 +391,7 @@ class AsyncTractorbeam(AsyncAPIClient):
     def copy(
         self,
         *,
-        bearer_token: str | None = None,
+        api_token: str | None = None,
         base_url: str | httpx.URL | None = None,
         timeout: float | Timeout | None | NotGiven = NOT_GIVEN,
         http_client: httpx.AsyncClient | None = None,
@@ -350,7 +425,7 @@ class AsyncTractorbeam(AsyncAPIClient):
 
         http_client = http_client or self._client
         return self.__class__(
-            bearer_token=bearer_token or self.bearer_token,
+            api_token=api_token or self.api_token,
             base_url=base_url or self.base_url,
             timeout=self.timeout if isinstance(timeout, NotGiven) else timeout,
             http_client=http_client,
@@ -363,6 +438,70 @@ class AsyncTractorbeam(AsyncAPIClient):
     # Alias for `copy` for nicer inline usage, e.g.
     # client.with_options(timeout=10).foo.create(...)
     with_options = copy
+
+    async def health_check(
+        self,
+        *,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+    ) -> HealthCheckResponse:
+        """This is a simple health check that does not require authentication.
+
+        It is used
+        to check if the server is running and healthy.
+        """
+        return await self.get(
+            "/health",
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
+            cast_to=HealthCheckResponse,
+        )
+
+    async def query(
+        self,
+        *,
+        depth: int,
+        graph_names: List[str],
+        query: str,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+    ) -> QueryResponse:
+        """
+        Execute a natural language query across multiple graphs.
+
+        Args:
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        return await self.post(
+            "/query",
+            body=await async_maybe_transform(
+                {
+                    "depth": depth,
+                    "graph_names": graph_names,
+                    "query": query,
+                },
+                client_query_params.ClientQueryParams,
+            ),
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
+            cast_to=QueryResponse,
+        )
 
     @override
     def _make_status_error(
@@ -403,8 +542,14 @@ class TractorbeamWithRawResponse:
         self.api_tokens = api_tokens.APITokensResourceWithRawResponse(client.api_tokens)
         self.documents = documents.DocumentsResourceWithRawResponse(client.documents)
         self.graphs = graphs.GraphsResourceWithRawResponse(client.graphs)
-        self.health = health.HealthResourceWithRawResponse(client.health)
         self.queries = queries.QueriesResourceWithRawResponse(client.queries)
+
+        self.health_check = to_raw_response_wrapper(
+            client.health_check,
+        )
+        self.query = to_raw_response_wrapper(
+            client.query,
+        )
 
 
 class AsyncTractorbeamWithRawResponse:
@@ -412,8 +557,14 @@ class AsyncTractorbeamWithRawResponse:
         self.api_tokens = api_tokens.AsyncAPITokensResourceWithRawResponse(client.api_tokens)
         self.documents = documents.AsyncDocumentsResourceWithRawResponse(client.documents)
         self.graphs = graphs.AsyncGraphsResourceWithRawResponse(client.graphs)
-        self.health = health.AsyncHealthResourceWithRawResponse(client.health)
         self.queries = queries.AsyncQueriesResourceWithRawResponse(client.queries)
+
+        self.health_check = async_to_raw_response_wrapper(
+            client.health_check,
+        )
+        self.query = async_to_raw_response_wrapper(
+            client.query,
+        )
 
 
 class TractorbeamWithStreamedResponse:
@@ -421,8 +572,14 @@ class TractorbeamWithStreamedResponse:
         self.api_tokens = api_tokens.APITokensResourceWithStreamingResponse(client.api_tokens)
         self.documents = documents.DocumentsResourceWithStreamingResponse(client.documents)
         self.graphs = graphs.GraphsResourceWithStreamingResponse(client.graphs)
-        self.health = health.HealthResourceWithStreamingResponse(client.health)
         self.queries = queries.QueriesResourceWithStreamingResponse(client.queries)
+
+        self.health_check = to_streamed_response_wrapper(
+            client.health_check,
+        )
+        self.query = to_streamed_response_wrapper(
+            client.query,
+        )
 
 
 class AsyncTractorbeamWithStreamedResponse:
@@ -430,8 +587,14 @@ class AsyncTractorbeamWithStreamedResponse:
         self.api_tokens = api_tokens.AsyncAPITokensResourceWithStreamingResponse(client.api_tokens)
         self.documents = documents.AsyncDocumentsResourceWithStreamingResponse(client.documents)
         self.graphs = graphs.AsyncGraphsResourceWithStreamingResponse(client.graphs)
-        self.health = health.AsyncHealthResourceWithStreamingResponse(client.health)
         self.queries = queries.AsyncQueriesResourceWithStreamingResponse(client.queries)
+
+        self.health_check = async_to_streamed_response_wrapper(
+            client.health_check,
+        )
+        self.query = async_to_streamed_response_wrapper(
+            client.query,
+        )
 
 
 Client = Tractorbeam

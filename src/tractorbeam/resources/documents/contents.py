@@ -14,7 +14,7 @@ from ..._response import (
     async_to_streamed_response_wrapper,
 )
 from ..._base_client import make_request_options
-from ...types.documents.document_contents import DocumentContents
+from ...types.document_contents import DocumentContents
 
 __all__ = ["ContentsResource", "AsyncContentsResource"]
 
