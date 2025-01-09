@@ -16,7 +16,7 @@ The REST API documentation can be found on [docs.tractorbeam.com](https://docs.t
 
 ```sh
 # install from PyPI
-pip install --pre tractorbeam
+pip install tractorbeam
 ```
 
 ## Usage
