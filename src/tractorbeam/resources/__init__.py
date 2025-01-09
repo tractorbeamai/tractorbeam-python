@@ -1,13 +1,5 @@
 # File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-from .query import (
-    QueryResource,
-    AsyncQueryResource,
-    QueryResourceWithRawResponse,
-    AsyncQueryResourceWithRawResponse,
-    QueryResourceWithStreamingResponse,
-    AsyncQueryResourceWithStreamingResponse,
-)
 from .graphs import (
     GraphsResource,
     AsyncGraphsResource,
@@ -80,10 +72,4 @@ __all__ = [
     "AsyncQueriesResourceWithRawResponse",
     "QueriesResourceWithStreamingResponse",
     "AsyncQueriesResourceWithStreamingResponse",
-    "QueryResource",
-    "AsyncQueryResource",
-    "QueryResourceWithRawResponse",
-    "AsyncQueryResourceWithRawResponse",
-    "QueryResourceWithStreamingResponse",
-    "AsyncQueryResourceWithStreamingResponse",
 ]

@@ -3,8 +3,8 @@
 
 from .._models import BaseModel
 
-__all__ = ["HealthRestrictResponse"]
+__all__ = ["HealthCheckResponse"]
 
 
-class HealthRestrictResponse(BaseModel):
+class HealthCheckResponse(BaseModel):
     health: str
