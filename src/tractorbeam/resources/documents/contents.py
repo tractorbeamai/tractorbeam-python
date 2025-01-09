@@ -14,7 +14,7 @@ from ..._response import (
     async_to_streamed_response_wrapper,
 )
 from ..._base_client import make_request_options
-from ...types.shared.document_contents import DocumentContents
+from ...types.document_contents import DocumentContents
 
 __all__ = ["ContentsResource", "AsyncContentsResource"]
 
@@ -26,7 +26,7 @@ class ContentsResource(SyncAPIResource):
         This property can be used as a prefix for any HTTP method call to return the
         the raw response object instead of the parsed content.
 
-        For more information, see https://www.github.com/tractorbeamai/tractorbeam-python#accessing-raw-response-data-eg-headers
+        For more information, see https://www.github.com/stainless-sdks/tractorbeam-python#accessing-raw-response-data-eg-headers
         """
         return ContentsResourceWithRawResponse(self)
 
@@ -35,7 +35,7 @@ class ContentsResource(SyncAPIResource):
         """
         An alternative to `.with_raw_response` that doesn't eagerly read the response body.
 
-        For more information, see https://www.github.com/tractorbeamai/tractorbeam-python#with_streaming_response
+        For more information, see https://www.github.com/stainless-sdks/tractorbeam-python#with_streaming_response
         """
         return ContentsResourceWithStreamingResponse(self)
 
@@ -80,7 +80,7 @@ class AsyncContentsResource(AsyncAPIResource):
         This property can be used as a prefix for any HTTP method call to return the
         the raw response object instead of the parsed content.
 
-        For more information, see https://www.github.com/tractorbeamai/tractorbeam-python#accessing-raw-response-data-eg-headers
+        For more information, see https://www.github.com/stainless-sdks/tractorbeam-python#accessing-raw-response-data-eg-headers
         """
         return AsyncContentsResourceWithRawResponse(self)
 
@@ -89,7 +89,7 @@ class AsyncContentsResource(AsyncAPIResource):
         """
         An alternative to `.with_raw_response` that doesn't eagerly read the response body.
 
-        For more information, see https://www.github.com/tractorbeamai/tractorbeam-python#with_streaming_response
+        For more information, see https://www.github.com/stainless-sdks/tractorbeam-python#with_streaming_response
         """
         return AsyncContentsResourceWithStreamingResponse(self)
 

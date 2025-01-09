@@ -158,52 +158,6 @@ class TestDocuments:
                 "",
             )
 
-    @parametrize
-    def test_method_tuples(self, client: Tractorbeam) -> None:
-        document = client.documents.tuples(
-            id="doc_2yYISEvrO9LrLAOJjnw27",
-        )
-        assert document is None
-
-    @parametrize
-    def test_method_tuples_with_all_params(self, client: Tractorbeam) -> None:
-        document = client.documents.tuples(
-            id="doc_2yYISEvrO9LrLAOJjnw27",
-            stream=True,
-        )
-        assert document is None
-
-    @parametrize
-    def test_raw_response_tuples(self, client: Tractorbeam) -> None:
-        response = client.documents.with_raw_response.tuples(
-            id="doc_2yYISEvrO9LrLAOJjnw27",
-        )
-
-        assert response.is_closed is True
-        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
-        document = response.parse()
-        assert document is None
-
-    @parametrize
-    def test_streaming_response_tuples(self, client: Tractorbeam) -> None:
-        with client.documents.with_streaming_response.tuples(
-            id="doc_2yYISEvrO9LrLAOJjnw27",
-        ) as response:
-            assert not response.is_closed
-            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
-
-            document = response.parse()
-            assert document is None
-
-        assert cast(Any, response.is_closed) is True
-
-    @parametrize
-    def test_path_params_tuples(self, client: Tractorbeam) -> None:
-        with pytest.raises(ValueError, match=r"Expected a non-empty value for `id` but received ''"):
-            client.documents.with_raw_response.tuples(
-                id="",
-            )
-
 
 class TestAsyncDocuments:
     parametrize = pytest.mark.parametrize("async_client", [False, True], indirect=True, ids=["loose", "strict"])
@@ -347,50 +301,4 @@ class TestAsyncDocuments:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `id` but received ''"):
             await async_client.documents.with_raw_response.delete(
                 "",
-            )
-
-    @parametrize
-    async def test_method_tuples(self, async_client: AsyncTractorbeam) -> None:
-        document = await async_client.documents.tuples(
-            id="doc_2yYISEvrO9LrLAOJjnw27",
-        )
-        assert document is None
-
-    @parametrize
-    async def test_method_tuples_with_all_params(self, async_client: AsyncTractorbeam) -> None:
-        document = await async_client.documents.tuples(
-            id="doc_2yYISEvrO9LrLAOJjnw27",
-            stream=True,
-        )
-        assert document is None
-
-    @parametrize
-    async def test_raw_response_tuples(self, async_client: AsyncTractorbeam) -> None:
-        response = await async_client.documents.with_raw_response.tuples(
-            id="doc_2yYISEvrO9LrLAOJjnw27",
-        )
-
-        assert response.is_closed is True
-        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
-        document = await response.parse()
-        assert document is None
-
-    @parametrize
-    async def test_streaming_response_tuples(self, async_client: AsyncTractorbeam) -> None:
-        async with async_client.documents.with_streaming_response.tuples(
-            id="doc_2yYISEvrO9LrLAOJjnw27",
-        ) as response:
-            assert not response.is_closed
-            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
-
-            document = await response.parse()
-            assert document is None
-
-        assert cast(Any, response.is_closed) is True
-
-    @parametrize
-    async def test_path_params_tuples(self, async_client: AsyncTractorbeam) -> None:
-        with pytest.raises(ValueError, match=r"Expected a non-empty value for `id` but received ''"):
-            await async_client.documents.with_raw_response.tuples(
-                id="",
             )

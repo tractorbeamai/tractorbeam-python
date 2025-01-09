@@ -14,7 +14,7 @@ from .._response import (
     async_to_streamed_response_wrapper,
 )
 from .._base_client import make_request_options
-from ..types.health_restrict_response import HealthRestrictResponse
+from ..types.health_check_response import HealthCheckResponse
 
 __all__ = ["HealthResource", "AsyncHealthResource"]
 
@@ -26,7 +26,7 @@ class HealthResource(SyncAPIResource):
         This property can be used as a prefix for any HTTP method call to return the
         the raw response object instead of the parsed content.
 
-        For more information, see https://www.github.com/tractorbeamai/tractorbeam-python#accessing-raw-response-data-eg-headers
+        For more information, see https://www.github.com/stainless-sdks/tractorbeam-python#accessing-raw-response-data-eg-headers
         """
         return HealthResourceWithRawResponse(self)
 
@@ -35,11 +35,11 @@ class HealthResource(SyncAPIResource):
         """
         An alternative to `.with_raw_response` that doesn't eagerly read the response body.
 
-        For more information, see https://www.github.com/tractorbeamai/tractorbeam-python#with_streaming_response
+        For more information, see https://www.github.com/stainless-sdks/tractorbeam-python#with_streaming_response
         """
         return HealthResourceWithStreamingResponse(self)
 
-    def restrict(
+    def check(
         self,
         *,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
@@ -48,7 +48,7 @@ class HealthResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
-    ) -> HealthRestrictResponse:
+    ) -> HealthCheckResponse:
         """This is a simple health check that does not require authentication.
 
         It is used
@@ -59,7 +59,7 @@ class HealthResource(SyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=HealthRestrictResponse,
+            cast_to=HealthCheckResponse,
         )
 
 
@@ -70,7 +70,7 @@ class AsyncHealthResource(AsyncAPIResource):
         This property can be used as a prefix for any HTTP method call to return the
         the raw response object instead of the parsed content.
 
-        For more information, see https://www.github.com/tractorbeamai/tractorbeam-python#accessing-raw-response-data-eg-headers
+        For more information, see https://www.github.com/stainless-sdks/tractorbeam-python#accessing-raw-response-data-eg-headers
         """
         return AsyncHealthResourceWithRawResponse(self)
 
@@ -79,11 +79,11 @@ class AsyncHealthResource(AsyncAPIResource):
         """
         An alternative to `.with_raw_response` that doesn't eagerly read the response body.
 
-        For more information, see https://www.github.com/tractorbeamai/tractorbeam-python#with_streaming_response
+        For more information, see https://www.github.com/stainless-sdks/tractorbeam-python#with_streaming_response
         """
         return AsyncHealthResourceWithStreamingResponse(self)
 
-    async def restrict(
+    async def check(
         self,
         *,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
@@ -92,7 +92,7 @@ class AsyncHealthResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
-    ) -> HealthRestrictResponse:
+    ) -> HealthCheckResponse:
         """This is a simple health check that does not require authentication.
 
         It is used
@@ -103,7 +103,7 @@ class AsyncHealthResource(AsyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=HealthRestrictResponse,
+            cast_to=HealthCheckResponse,
         )
 
 
@@ -111,8 +111,8 @@ class HealthResourceWithRawResponse:
     def __init__(self, health: HealthResource) -> None:
         self._health = health
 
-        self.restrict = to_raw_response_wrapper(
-            health.restrict,
+        self.check = to_raw_response_wrapper(
+            health.check,
         )
 
 
@@ -120,8 +120,8 @@ class AsyncHealthResourceWithRawResponse:
     def __init__(self, health: AsyncHealthResource) -> None:
         self._health = health
 
-        self.restrict = async_to_raw_response_wrapper(
-            health.restrict,
+        self.check = async_to_raw_response_wrapper(
+            health.check,
         )
 
 
@@ -129,8 +129,8 @@ class HealthResourceWithStreamingResponse:
     def __init__(self, health: HealthResource) -> None:
         self._health = health
 
-        self.restrict = to_streamed_response_wrapper(
-            health.restrict,
+        self.check = to_streamed_response_wrapper(
+            health.check,
         )
 
 
@@ -138,6 +138,6 @@ class AsyncHealthResourceWithStreamingResponse:
     def __init__(self, health: AsyncHealthResource) -> None:
         self._health = health
 
-        self.restrict = async_to_streamed_response_wrapper(
-            health.restrict,
+        self.check = async_to_streamed_response_wrapper(
+            health.check,
         )

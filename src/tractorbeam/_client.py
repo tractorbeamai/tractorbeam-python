@@ -24,7 +24,7 @@ from ._utils import (
     get_async_library,
 )
 from ._version import __version__
-from .resources import query, health, queries, api_tokens
+from .resources import health, queries, api_tokens
 from ._streaming import Stream as Stream, AsyncStream as AsyncStream
 from ._exceptions import APIStatusError, TractorbeamError
 from ._base_client import (
@@ -53,7 +53,6 @@ class Tractorbeam(SyncAPIClient):
     graphs: graphs.GraphsResource
     health: health.HealthResource
     queries: queries.QueriesResource
-    query: query.QueryResource
     with_raw_response: TractorbeamWithRawResponse
     with_streaming_response: TractorbeamWithStreamedResponse
 
@@ -116,7 +115,6 @@ class Tractorbeam(SyncAPIClient):
         self.graphs = graphs.GraphsResource(self)
         self.health = health.HealthResource(self)
         self.queries = queries.QueriesResource(self)
-        self.query = query.QueryResource(self)
         self.with_raw_response = TractorbeamWithRawResponse(self)
         self.with_streaming_response = TractorbeamWithStreamedResponse(self)
 
@@ -231,7 +229,6 @@ class AsyncTractorbeam(AsyncAPIClient):
     graphs: graphs.AsyncGraphsResource
     health: health.AsyncHealthResource
     queries: queries.AsyncQueriesResource
-    query: query.AsyncQueryResource
     with_raw_response: AsyncTractorbeamWithRawResponse
     with_streaming_response: AsyncTractorbeamWithStreamedResponse
 
@@ -294,7 +291,6 @@ class AsyncTractorbeam(AsyncAPIClient):
         self.graphs = graphs.AsyncGraphsResource(self)
         self.health = health.AsyncHealthResource(self)
         self.queries = queries.AsyncQueriesResource(self)
-        self.query = query.AsyncQueryResource(self)
         self.with_raw_response = AsyncTractorbeamWithRawResponse(self)
         self.with_streaming_response = AsyncTractorbeamWithStreamedResponse(self)
 
@@ -410,7 +406,6 @@ class TractorbeamWithRawResponse:
         self.graphs = graphs.GraphsResourceWithRawResponse(client.graphs)
         self.health = health.HealthResourceWithRawResponse(client.health)
         self.queries = queries.QueriesResourceWithRawResponse(client.queries)
-        self.query = query.QueryResourceWithRawResponse(client.query)
 
 
 class AsyncTractorbeamWithRawResponse:
@@ -420,7 +415,6 @@ class AsyncTractorbeamWithRawResponse:
         self.graphs = graphs.AsyncGraphsResourceWithRawResponse(client.graphs)
         self.health = health.AsyncHealthResourceWithRawResponse(client.health)
         self.queries = queries.AsyncQueriesResourceWithRawResponse(client.queries)
-        self.query = query.AsyncQueryResourceWithRawResponse(client.query)
 
 
 class TractorbeamWithStreamedResponse:
@@ -430,7 +424,6 @@ class TractorbeamWithStreamedResponse:
         self.graphs = graphs.GraphsResourceWithStreamingResponse(client.graphs)
         self.health = health.HealthResourceWithStreamingResponse(client.health)
         self.queries = queries.QueriesResourceWithStreamingResponse(client.queries)
-        self.query = query.QueryResourceWithStreamingResponse(client.query)
 
 
 class AsyncTractorbeamWithStreamedResponse:
@@ -440,7 +433,6 @@ class AsyncTractorbeamWithStreamedResponse:
         self.graphs = graphs.AsyncGraphsResourceWithStreamingResponse(client.graphs)
         self.health = health.AsyncHealthResourceWithStreamingResponse(client.health)
         self.queries = queries.AsyncQueriesResourceWithStreamingResponse(client.queries)
-        self.query = query.AsyncQueryResourceWithStreamingResponse(client.query)
 
 
 Client = Tractorbeam

@@ -2,11 +2,9 @@
 
 from __future__ import annotations
 
-from typing import Iterable, Optional
-
 import httpx
 
-from ..._types import NOT_GIVEN, Body, Query, Headers, NotGiven
+from ..._types import NOT_GIVEN, Body, Query, Headers, NoneType, NotGiven
 from ..._utils import (
     maybe_transform,
     async_maybe_transform,
@@ -20,8 +18,7 @@ from ..._response import (
     async_to_streamed_response_wrapper,
 )
 from ..._base_client import make_request_options
-from ...types.graphs import tuple_create_params
-from ...types.graphs.tuple_create_response import TupleCreateResponse
+from ...types.documents import tuple_retrieve_params
 
 __all__ = ["TuplesResource", "AsyncTuplesResource"]
 
@@ -46,24 +43,27 @@ class TuplesResource(SyncAPIResource):
         """
         return TuplesResourceWithStreamingResponse(self)
 
-    def create(
+    def retrieve(
         self,
-        name: str,
+        id: str,
         *,
-        owner: str,
-        tuples: Iterable[tuple_create_params.Tuple],
-        embeddings: Optional[Iterable[Iterable[float]]] | NotGiven = NOT_GIVEN,
+        stream: bool | NotGiven = NOT_GIVEN,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
-    ) -> TupleCreateResponse:
-        """
-        Insert tuples into an existing graph.
+    ) -> None:
+        """Extract tuples from a document by its ID.
+
+        If streaming is enabled, the response
+        will be a stream of tuples as JSON server-sent events. This endpoint requires
+        calling our external inference service, and will have significant latency.
 
         Args:
+          stream: Whether to stream the tuples back as a stream of JSON server-sent events
+
           extra_headers: Send extra headers
 
           extra_query: Add additional query parameters to the request
@@ -72,23 +72,19 @@ class TuplesResource(SyncAPIResource):
 
           timeout: Override the client-level default timeout for this request, in seconds
         """
-        if not owner:
-            raise ValueError(f"Expected a non-empty value for `owner` but received {owner!r}")
-        if not name:
-            raise ValueError(f"Expected a non-empty value for `name` but received {name!r}")
-        return self._post(
-            f"/graphs/{owner}/{name}/tuples",
-            body=maybe_transform(
-                {
-                    "tuples": tuples,
-                    "embeddings": embeddings,
-                },
-                tuple_create_params.TupleCreateParams,
-            ),
+        if not id:
+            raise ValueError(f"Expected a non-empty value for `id` but received {id!r}")
+        extra_headers = {"Accept": "*/*", **(extra_headers or {})}
+        return self._get(
+            f"/documents/{id}/tuples",
             options=make_request_options(
-                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+                extra_headers=extra_headers,
+                extra_query=extra_query,
+                extra_body=extra_body,
+                timeout=timeout,
+                query=maybe_transform({"stream": stream}, tuple_retrieve_params.TupleRetrieveParams),
             ),
-            cast_to=TupleCreateResponse,
+            cast_to=NoneType,
         )
 
 
@@ -112,24 +108,27 @@ class AsyncTuplesResource(AsyncAPIResource):
         """
         return AsyncTuplesResourceWithStreamingResponse(self)
 
-    async def create(
+    async def retrieve(
         self,
-        name: str,
+        id: str,
         *,
-        owner: str,
-        tuples: Iterable[tuple_create_params.Tuple],
-        embeddings: Optional[Iterable[Iterable[float]]] | NotGiven = NOT_GIVEN,
+        stream: bool | NotGiven = NOT_GIVEN,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
-    ) -> TupleCreateResponse:
-        """
-        Insert tuples into an existing graph.
+    ) -> None:
+        """Extract tuples from a document by its ID.
+
+        If streaming is enabled, the response
+        will be a stream of tuples as JSON server-sent events. This endpoint requires
+        calling our external inference service, and will have significant latency.
 
         Args:
+          stream: Whether to stream the tuples back as a stream of JSON server-sent events
+
           extra_headers: Send extra headers
 
           extra_query: Add additional query parameters to the request
@@ -138,23 +137,19 @@ class AsyncTuplesResource(AsyncAPIResource):
 
           timeout: Override the client-level default timeout for this request, in seconds
         """
-        if not owner:
-            raise ValueError(f"Expected a non-empty value for `owner` but received {owner!r}")
-        if not name:
-            raise ValueError(f"Expected a non-empty value for `name` but received {name!r}")
-        return await self._post(
-            f"/graphs/{owner}/{name}/tuples",
-            body=await async_maybe_transform(
-                {
-                    "tuples": tuples,
-                    "embeddings": embeddings,
-                },
-                tuple_create_params.TupleCreateParams,
-            ),
+        if not id:
+            raise ValueError(f"Expected a non-empty value for `id` but received {id!r}")
+        extra_headers = {"Accept": "*/*", **(extra_headers or {})}
+        return await self._get(
+            f"/documents/{id}/tuples",
             options=make_request_options(
-                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+                extra_headers=extra_headers,
+                extra_query=extra_query,
+                extra_body=extra_body,
+                timeout=timeout,
+                query=await async_maybe_transform({"stream": stream}, tuple_retrieve_params.TupleRetrieveParams),
             ),
-            cast_to=TupleCreateResponse,
+            cast_to=NoneType,
         )
 
 
@@ -162,8 +157,8 @@ class TuplesResourceWithRawResponse:
     def __init__(self, tuples: TuplesResource) -> None:
         self._tuples = tuples
 
-        self.create = to_raw_response_wrapper(
-            tuples.create,
+        self.retrieve = to_raw_response_wrapper(
+            tuples.retrieve,
         )
 
 
@@ -171,8 +166,8 @@ class AsyncTuplesResourceWithRawResponse:
     def __init__(self, tuples: AsyncTuplesResource) -> None:
         self._tuples = tuples
 
-        self.create = async_to_raw_response_wrapper(
-            tuples.create,
+        self.retrieve = async_to_raw_response_wrapper(
+            tuples.retrieve,
         )
 
 
@@ -180,8 +175,8 @@ class TuplesResourceWithStreamingResponse:
     def __init__(self, tuples: TuplesResource) -> None:
         self._tuples = tuples
 
-        self.create = to_streamed_response_wrapper(
-            tuples.create,
+        self.retrieve = to_streamed_response_wrapper(
+            tuples.retrieve,
         )
 
 
@@ -189,6 +184,6 @@ class AsyncTuplesResourceWithStreamingResponse:
     def __init__(self, tuples: AsyncTuplesResource) -> None:
         self._tuples = tuples
 
-        self.create = async_to_streamed_response_wrapper(
-            tuples.create,
+        self.retrieve = async_to_streamed_response_wrapper(
+            tuples.retrieve,
         )

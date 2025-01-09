@@ -1,9 +1,3 @@
-# Shared Types
-
-```python
-from tractorbeam.types import DocumentContents
-```
-
 # APITokens
 
 Types:
@@ -24,7 +18,7 @@ Methods:
 Types:
 
 ```python
-from tractorbeam.types import Document, DocumentListResponse
+from tractorbeam.types import Document, DocumentContents, DocumentListResponse
 ```
 
 Methods:
@@ -33,13 +27,18 @@ Methods:
 - <code title="get /documents/{id}">client.documents.<a href="./src/tractorbeam/resources/documents/documents.py">retrieve</a>(id) -> <a href="./src/tractorbeam/types/document.py">Document</a></code>
 - <code title="get /documents">client.documents.<a href="./src/tractorbeam/resources/documents/documents.py">list</a>() -> <a href="./src/tractorbeam/types/document_list_response.py">DocumentListResponse</a></code>
 - <code title="delete /documents/{id}">client.documents.<a href="./src/tractorbeam/resources/documents/documents.py">delete</a>(id) -> None</code>
-- <code title="get /documents/{id}/tuples">client.documents.<a href="./src/tractorbeam/resources/documents/documents.py">tuples</a>(id, \*\*<a href="src/tractorbeam/types/document_tuples_params.py">params</a>) -> None</code>
 
 ## Contents
 
 Methods:
 
-- <code title="get /documents/{id}/contents">client.documents.contents.<a href="./src/tractorbeam/resources/documents/contents.py">retrieve</a>(id) -> <a href="./src/tractorbeam/types/shared/document_contents.py">DocumentContents</a></code>
+- <code title="get /documents/{id}/contents">client.documents.contents.<a href="./src/tractorbeam/resources/documents/contents.py">retrieve</a>(id) -> <a href="./src/tractorbeam/types/document_contents.py">DocumentContents</a></code>
+
+## Tuples
+
+Methods:
+
+- <code title="get /documents/{id}/tuples">client.documents.tuples.<a href="./src/tractorbeam/resources/documents/tuples.py">retrieve</a>(id, \*\*<a href="src/tractorbeam/types/documents/tuple_retrieve_params.py">params</a>) -> None</code>
 
 # Graphs
 
@@ -74,33 +73,22 @@ Methods:
 Types:
 
 ```python
-from tractorbeam.types import HealthRestrictResponse
+from tractorbeam.types import HealthCheckResponse
 ```
 
 Methods:
 
-- <code title="get /health">client.health.<a href="./src/tractorbeam/resources/health.py">restrict</a>() -> <a href="./src/tractorbeam/types/health_restrict_response.py">HealthRestrictResponse</a></code>
+- <code title="get /health">client.health.<a href="./src/tractorbeam/resources/health.py">check</a>() -> <a href="./src/tractorbeam/types/health_check_response.py">HealthCheckResponse</a></code>
 
 # Queries
 
 Types:
 
 ```python
-from tractorbeam.types import QueryDecodeResponse
+from tractorbeam.types import QueryCreateResponse, QueryDecodeResponse
 ```
 
 Methods:
 
+- <code title="post /query">client.queries.<a href="./src/tractorbeam/resources/queries.py">create</a>(\*\*<a href="src/tractorbeam/types/query_create_params.py">params</a>) -> <a href="./src/tractorbeam/types/query_create_response.py">QueryCreateResponse</a></code>
 - <code title="post /queries/decode">client.queries.<a href="./src/tractorbeam/resources/queries.py">decode</a>(\*\*<a href="src/tractorbeam/types/query_decode_params.py">params</a>) -> <a href="./src/tractorbeam/types/query_decode_response.py">QueryDecodeResponse</a></code>
-
-# Query
-
-Types:
-
-```python
-from tractorbeam.types import QueryRestrictResponse
-```
-
-Methods:
-
-- <code title="post /query">client.query.<a href="./src/tractorbeam/resources/query.py">restrict</a>(\*\*<a href="src/tractorbeam/types/query_restrict_params.py">params</a>) -> <a href="./src/tractorbeam/types/query_restrict_response.py">QueryRestrictResponse</a></code>
