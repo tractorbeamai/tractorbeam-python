@@ -5,10 +5,10 @@ from __future__ import annotations
 from typing import List
 from typing_extensions import Required, TypedDict
 
-__all__ = ["ClientQueryParams"]
+__all__ = ["QueryRestrictParams"]
 
 
-class ClientQueryParams(TypedDict, total=False):
+class QueryRestrictParams(TypedDict, total=False):
     depth: Required[int]
 
     graph_names: Required[List[str]]

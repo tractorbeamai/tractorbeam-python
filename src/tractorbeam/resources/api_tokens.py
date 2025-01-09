@@ -32,7 +32,7 @@ class APITokensResource(SyncAPIResource):
         This property can be used as a prefix for any HTTP method call to return the
         the raw response object instead of the parsed content.
 
-        For more information, see https://www.github.com/tractorbeamai/tractorbeam-python#accessing-raw-response-data-eg-headers
+        For more information, see https://www.github.com/stainless-sdks/tractorbeam-python#accessing-raw-response-data-eg-headers
         """
         return APITokensResourceWithRawResponse(self)
 
@@ -41,7 +41,7 @@ class APITokensResource(SyncAPIResource):
         """
         An alternative to `.with_raw_response` that doesn't eagerly read the response body.
 
-        For more information, see https://www.github.com/tractorbeamai/tractorbeam-python#with_streaming_response
+        For more information, see https://www.github.com/stainless-sdks/tractorbeam-python#with_streaming_response
         """
         return APITokensResourceWithStreamingResponse(self)
 
@@ -178,7 +178,7 @@ class AsyncAPITokensResource(AsyncAPIResource):
         This property can be used as a prefix for any HTTP method call to return the
         the raw response object instead of the parsed content.
 
-        For more information, see https://www.github.com/tractorbeamai/tractorbeam-python#accessing-raw-response-data-eg-headers
+        For more information, see https://www.github.com/stainless-sdks/tractorbeam-python#accessing-raw-response-data-eg-headers
         """
         return AsyncAPITokensResourceWithRawResponse(self)
 
@@ -187,7 +187,7 @@ class AsyncAPITokensResource(AsyncAPIResource):
         """
         An alternative to `.with_raw_response` that doesn't eagerly read the response body.
 
-        For more information, see https://www.github.com/tractorbeamai/tractorbeam-python#with_streaming_response
+        For more information, see https://www.github.com/stainless-sdks/tractorbeam-python#with_streaming_response
         """
         return AsyncAPITokensResourceWithStreamingResponse(self)
 

@@ -1,11 +1,10 @@
 # File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-from typing import List
 
 from .._models import BaseModel
 
-__all__ = ["QueryResponse"]
+__all__ = ["HealthRestrictResponse"]
 
 
-class QueryResponse(BaseModel):
-    chains: List[str]
+class HealthRestrictResponse(BaseModel):
+    health: str

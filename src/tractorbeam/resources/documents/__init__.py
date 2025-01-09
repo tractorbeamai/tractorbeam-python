@@ -1,13 +1,5 @@
 # File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-from .tuples import (
-    TuplesResource,
-    AsyncTuplesResource,
-    TuplesResourceWithRawResponse,
-    AsyncTuplesResourceWithRawResponse,
-    TuplesResourceWithStreamingResponse,
-    AsyncTuplesResourceWithStreamingResponse,
-)
 from .contents import (
     ContentsResource,
     AsyncContentsResource,
@@ -32,12 +24,6 @@ __all__ = [
     "AsyncContentsResourceWithRawResponse",
     "ContentsResourceWithStreamingResponse",
     "AsyncContentsResourceWithStreamingResponse",
-    "TuplesResource",
-    "AsyncTuplesResource",
-    "TuplesResourceWithRawResponse",
-    "AsyncTuplesResourceWithRawResponse",
-    "TuplesResourceWithStreamingResponse",
-    "AsyncTuplesResourceWithStreamingResponse",
     "DocumentsResource",
     "AsyncDocumentsResource",
     "DocumentsResourceWithRawResponse",
