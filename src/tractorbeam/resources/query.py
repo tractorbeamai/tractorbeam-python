@@ -33,7 +33,7 @@ class QueryResource(SyncAPIResource):
         This property can be used as a prefix for any HTTP method call to return the
         the raw response object instead of the parsed content.
 
-        For more information, see https://www.github.com/stainless-sdks/tractorbeam-python#accessing-raw-response-data-eg-headers
+        For more information, see https://www.github.com/tractorbeamai/tractorbeam-python#accessing-raw-response-data-eg-headers
         """
         return QueryResourceWithRawResponse(self)
 
@@ -42,7 +42,7 @@ class QueryResource(SyncAPIResource):
         """
         An alternative to `.with_raw_response` that doesn't eagerly read the response body.
 
-        For more information, see https://www.github.com/stainless-sdks/tractorbeam-python#with_streaming_response
+        For more information, see https://www.github.com/tractorbeamai/tractorbeam-python#with_streaming_response
         """
         return QueryResourceWithStreamingResponse(self)
 
@@ -95,7 +95,7 @@ class AsyncQueryResource(AsyncAPIResource):
         This property can be used as a prefix for any HTTP method call to return the
         the raw response object instead of the parsed content.
 
-        For more information, see https://www.github.com/stainless-sdks/tractorbeam-python#accessing-raw-response-data-eg-headers
+        For more information, see https://www.github.com/tractorbeamai/tractorbeam-python#accessing-raw-response-data-eg-headers
         """
         return AsyncQueryResourceWithRawResponse(self)
 
@@ -104,7 +104,7 @@ class AsyncQueryResource(AsyncAPIResource):
         """
         An alternative to `.with_raw_response` that doesn't eagerly read the response body.
 
-        For more information, see https://www.github.com/stainless-sdks/tractorbeam-python#with_streaming_response
+        For more information, see https://www.github.com/tractorbeamai/tractorbeam-python#with_streaming_response
         """
         return AsyncQueryResourceWithStreamingResponse(self)
 
