@@ -15,12 +15,9 @@ The REST API documentation can be found on [docs.tractorbeam.com](https://docs.t
 ## Installation
 
 ```sh
-# install from the production repo
-pip install git+ssh://git@github.com/tractorbeamai/tractorbeam-python.git
+# install from PyPI
+pip install tractorbeam
 ```
-
-> [!NOTE]
-> Once this package is [published to PyPI](https://app.stainlessapi.com/docs/guides/publish), this will become: `pip install tractorbeam`
 
 ## Usage
 
