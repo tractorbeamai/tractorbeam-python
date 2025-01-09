@@ -24,7 +24,7 @@ from ._utils import (
     get_async_library,
 )
 from ._version import __version__
-from .resources import graphs
+from .resources import graphs, health, queries, api_tokens
 from ._streaming import Stream as Stream, AsyncStream as AsyncStream
 from ._exceptions import APIStatusError, TractorbeamError
 from ._base_client import (
@@ -32,6 +32,7 @@ from ._base_client import (
     SyncAPIClient,
     AsyncAPIClient,
 )
+from .resources.documents import documents
 
 __all__ = [
     "Timeout",
@@ -46,17 +47,21 @@ __all__ = [
 
 
 class Tractorbeam(SyncAPIClient):
+    api_tokens: api_tokens.APITokensResource
+    documents: documents.DocumentsResource
     graphs: graphs.GraphsResource
+    health: health.HealthResource
+    queries: queries.QueriesResource
     with_raw_response: TractorbeamWithRawResponse
     with_streaming_response: TractorbeamWithStreamedResponse
 
     # client options
-    api_key: str
+    bearer_token: str
 
     def __init__(
         self,
         *,
-        api_key: str | None = None,
+        bearer_token: str | None = None,
         base_url: str | httpx.URL | None = None,
         timeout: Union[float, Timeout, None, NotGiven] = NOT_GIVEN,
         max_retries: int = DEFAULT_MAX_RETRIES,
@@ -76,17 +81,17 @@ class Tractorbeam(SyncAPIClient):
         # part of our public interface in the future.
         _strict_response_validation: bool = False,
     ) -> None:
-        """Construct a new synchronous Tractorbeam client instance.
+        """Construct a new synchronous tractorbeam client instance.
 
-        This automatically infers the `api_key` argument from the `TRACTORBEAM_API_KEY` environment variable if it is not provided.
+        This automatically infers the `bearer_token` argument from the `API_TOKEN` environment variable if it is not provided.
         """
-        if api_key is None:
-            api_key = os.environ.get("TRACTORBEAM_API_KEY")
-        if api_key is None:
+        if bearer_token is None:
+            bearer_token = os.environ.get("API_TOKEN")
+        if bearer_token is None:
             raise TractorbeamError(
-                "The api_key client option must be set either by passing api_key to the client or by setting the TRACTORBEAM_API_KEY environment variable"
+                "The bearer_token client option must be set either by passing bearer_token to the client or by setting the API_TOKEN environment variable"
             )
-        self.api_key = api_key
+        self.bearer_token = bearer_token
 
         if base_url is None:
             base_url = os.environ.get("TRACTORBEAM_BASE_URL")
@@ -104,7 +109,11 @@ class Tractorbeam(SyncAPIClient):
             _strict_response_validation=_strict_response_validation,
         )
 
+        self.api_tokens = api_tokens.APITokensResource(self)
+        self.documents = documents.DocumentsResource(self)
         self.graphs = graphs.GraphsResource(self)
+        self.health = health.HealthResource(self)
+        self.queries = queries.QueriesResource(self)
         self.with_raw_response = TractorbeamWithRawResponse(self)
         self.with_streaming_response = TractorbeamWithStreamedResponse(self)
 
@@ -116,8 +125,8 @@ class Tractorbeam(SyncAPIClient):
     @property
     @override
     def auth_headers(self) -> dict[str, str]:
-        api_key = self.api_key
-        return {"X-API-Key": api_key}
+        bearer_token = self.bearer_token
+        return {"Authorization": f"Bearer {bearer_token}"}
 
     @property
     @override
@@ -131,7 +140,7 @@ class Tractorbeam(SyncAPIClient):
     def copy(
         self,
         *,
-        api_key: str | None = None,
+        bearer_token: str | None = None,
         base_url: str | httpx.URL | None = None,
         timeout: float | Timeout | None | NotGiven = NOT_GIVEN,
         http_client: httpx.Client | None = None,
@@ -165,7 +174,7 @@ class Tractorbeam(SyncAPIClient):
 
         http_client = http_client or self._client
         return self.__class__(
-            api_key=api_key or self.api_key,
+            bearer_token=bearer_token or self.bearer_token,
             base_url=base_url or self.base_url,
             timeout=self.timeout if isinstance(timeout, NotGiven) else timeout,
             http_client=http_client,
@@ -214,17 +223,21 @@ class Tractorbeam(SyncAPIClient):
 
 
 class AsyncTractorbeam(AsyncAPIClient):
+    api_tokens: api_tokens.AsyncAPITokensResource
+    documents: documents.AsyncDocumentsResource
     graphs: graphs.AsyncGraphsResource
+    health: health.AsyncHealthResource
+    queries: queries.AsyncQueriesResource
     with_raw_response: AsyncTractorbeamWithRawResponse
     with_streaming_response: AsyncTractorbeamWithStreamedResponse
 
     # client options
-    api_key: str
+    bearer_token: str
 
     def __init__(
         self,
         *,
-        api_key: str | None = None,
+        bearer_token: str | None = None,
         base_url: str | httpx.URL | None = None,
         timeout: Union[float, Timeout, None, NotGiven] = NOT_GIVEN,
         max_retries: int = DEFAULT_MAX_RETRIES,
@@ -244,17 +257,17 @@ class AsyncTractorbeam(AsyncAPIClient):
         # part of our public interface in the future.
         _strict_response_validation: bool = False,
     ) -> None:
-        """Construct a new async Tractorbeam client instance.
+        """Construct a new async tractorbeam client instance.
 
-        This automatically infers the `api_key` argument from the `TRACTORBEAM_API_KEY` environment variable if it is not provided.
+        This automatically infers the `bearer_token` argument from the `API_TOKEN` environment variable if it is not provided.
         """
-        if api_key is None:
-            api_key = os.environ.get("TRACTORBEAM_API_KEY")
-        if api_key is None:
+        if bearer_token is None:
+            bearer_token = os.environ.get("API_TOKEN")
+        if bearer_token is None:
             raise TractorbeamError(
-                "The api_key client option must be set either by passing api_key to the client or by setting the TRACTORBEAM_API_KEY environment variable"
+                "The bearer_token client option must be set either by passing bearer_token to the client or by setting the API_TOKEN environment variable"
             )
-        self.api_key = api_key
+        self.bearer_token = bearer_token
 
         if base_url is None:
             base_url = os.environ.get("TRACTORBEAM_BASE_URL")
@@ -272,7 +285,11 @@ class AsyncTractorbeam(AsyncAPIClient):
             _strict_response_validation=_strict_response_validation,
         )
 
+        self.api_tokens = api_tokens.AsyncAPITokensResource(self)
+        self.documents = documents.AsyncDocumentsResource(self)
         self.graphs = graphs.AsyncGraphsResource(self)
+        self.health = health.AsyncHealthResource(self)
+        self.queries = queries.AsyncQueriesResource(self)
         self.with_raw_response = AsyncTractorbeamWithRawResponse(self)
         self.with_streaming_response = AsyncTractorbeamWithStreamedResponse(self)
 
@@ -284,8 +301,8 @@ class AsyncTractorbeam(AsyncAPIClient):
     @property
     @override
     def auth_headers(self) -> dict[str, str]:
-        api_key = self.api_key
-        return {"X-API-Key": api_key}
+        bearer_token = self.bearer_token
+        return {"Authorization": f"Bearer {bearer_token}"}
 
     @property
     @override
@@ -299,7 +316,7 @@ class AsyncTractorbeam(AsyncAPIClient):
     def copy(
         self,
         *,
-        api_key: str | None = None,
+        bearer_token: str | None = None,
         base_url: str | httpx.URL | None = None,
         timeout: float | Timeout | None | NotGiven = NOT_GIVEN,
         http_client: httpx.AsyncClient | None = None,
@@ -333,7 +350,7 @@ class AsyncTractorbeam(AsyncAPIClient):
 
         http_client = http_client or self._client
         return self.__class__(
-            api_key=api_key or self.api_key,
+            bearer_token=bearer_token or self.bearer_token,
             base_url=base_url or self.base_url,
             timeout=self.timeout if isinstance(timeout, NotGiven) else timeout,
             http_client=http_client,
@@ -383,22 +400,38 @@ class AsyncTractorbeam(AsyncAPIClient):
 
 class TractorbeamWithRawResponse:
     def __init__(self, client: Tractorbeam) -> None:
+        self.api_tokens = api_tokens.APITokensResourceWithRawResponse(client.api_tokens)
+        self.documents = documents.DocumentsResourceWithRawResponse(client.documents)
         self.graphs = graphs.GraphsResourceWithRawResponse(client.graphs)
+        self.health = health.HealthResourceWithRawResponse(client.health)
+        self.queries = queries.QueriesResourceWithRawResponse(client.queries)
 
 
 class AsyncTractorbeamWithRawResponse:
     def __init__(self, client: AsyncTractorbeam) -> None:
+        self.api_tokens = api_tokens.AsyncAPITokensResourceWithRawResponse(client.api_tokens)
+        self.documents = documents.AsyncDocumentsResourceWithRawResponse(client.documents)
         self.graphs = graphs.AsyncGraphsResourceWithRawResponse(client.graphs)
+        self.health = health.AsyncHealthResourceWithRawResponse(client.health)
+        self.queries = queries.AsyncQueriesResourceWithRawResponse(client.queries)
 
 
 class TractorbeamWithStreamedResponse:
     def __init__(self, client: Tractorbeam) -> None:
+        self.api_tokens = api_tokens.APITokensResourceWithStreamingResponse(client.api_tokens)
+        self.documents = documents.DocumentsResourceWithStreamingResponse(client.documents)
         self.graphs = graphs.GraphsResourceWithStreamingResponse(client.graphs)
+        self.health = health.HealthResourceWithStreamingResponse(client.health)
+        self.queries = queries.QueriesResourceWithStreamingResponse(client.queries)
 
 
 class AsyncTractorbeamWithStreamedResponse:
     def __init__(self, client: AsyncTractorbeam) -> None:
+        self.api_tokens = api_tokens.AsyncAPITokensResourceWithStreamingResponse(client.api_tokens)
+        self.documents = documents.AsyncDocumentsResourceWithStreamingResponse(client.documents)
         self.graphs = graphs.AsyncGraphsResourceWithStreamingResponse(client.graphs)
+        self.health = health.AsyncHealthResourceWithStreamingResponse(client.health)
+        self.queries = queries.AsyncQueriesResourceWithStreamingResponse(client.queries)
 
 
 Client = Tractorbeam
