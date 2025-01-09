@@ -6,7 +6,7 @@ from typing import List
 
 import httpx
 
-from ..types import query_decode_params
+from ..types import query_restrict_params
 from .._types import NOT_GIVEN, Body, Query, Headers, NotGiven
 from .._utils import (
     maybe_transform,
@@ -21,32 +21,32 @@ from .._response import (
     async_to_streamed_response_wrapper,
 )
 from .._base_client import make_request_options
-from ..types.query_decode_response import QueryDecodeResponse
+from ..types.query_restrict_response import QueryRestrictResponse
 
-__all__ = ["QueriesResource", "AsyncQueriesResource"]
+__all__ = ["QueryResource", "AsyncQueryResource"]
 
 
-class QueriesResource(SyncAPIResource):
+class QueryResource(SyncAPIResource):
     @cached_property
-    def with_raw_response(self) -> QueriesResourceWithRawResponse:
+    def with_raw_response(self) -> QueryResourceWithRawResponse:
         """
         This property can be used as a prefix for any HTTP method call to return the
         the raw response object instead of the parsed content.
 
         For more information, see https://www.github.com/stainless-sdks/tractorbeam-python#accessing-raw-response-data-eg-headers
         """
-        return QueriesResourceWithRawResponse(self)
+        return QueryResourceWithRawResponse(self)
 
     @cached_property
-    def with_streaming_response(self) -> QueriesResourceWithStreamingResponse:
+    def with_streaming_response(self) -> QueryResourceWithStreamingResponse:
         """
         An alternative to `.with_raw_response` that doesn't eagerly read the response body.
 
         For more information, see https://www.github.com/stainless-sdks/tractorbeam-python#with_streaming_response
         """
-        return QueriesResourceWithStreamingResponse(self)
+        return QueryResourceWithStreamingResponse(self)
 
-    def decode(
+    def restrict(
         self,
         *,
         depth: int,
@@ -58,10 +58,9 @@ class QueriesResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
-    ) -> QueryDecodeResponse:
+    ) -> QueryRestrictResponse:
         """
-        Execute a keyword branch query across multiple graphs, extracting keywords from
-        natural language and exploring the graph structure around those keywords.
+        Execute a natural language query across multiple graphs.
 
         Args:
           extra_headers: Send extra headers
@@ -73,43 +72,43 @@ class QueriesResource(SyncAPIResource):
           timeout: Override the client-level default timeout for this request, in seconds
         """
         return self._post(
-            "/queries/decode",
+            "/query",
             body=maybe_transform(
                 {
                     "depth": depth,
                     "graph_names": graph_names,
                     "query": query,
                 },
-                query_decode_params.QueryDecodeParams,
+                query_restrict_params.QueryRestrictParams,
             ),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=QueryDecodeResponse,
+            cast_to=QueryRestrictResponse,
         )
 
 
-class AsyncQueriesResource(AsyncAPIResource):
+class AsyncQueryResource(AsyncAPIResource):
     @cached_property
-    def with_raw_response(self) -> AsyncQueriesResourceWithRawResponse:
+    def with_raw_response(self) -> AsyncQueryResourceWithRawResponse:
         """
         This property can be used as a prefix for any HTTP method call to return the
         the raw response object instead of the parsed content.
 
         For more information, see https://www.github.com/stainless-sdks/tractorbeam-python#accessing-raw-response-data-eg-headers
         """
-        return AsyncQueriesResourceWithRawResponse(self)
+        return AsyncQueryResourceWithRawResponse(self)
 
     @cached_property
-    def with_streaming_response(self) -> AsyncQueriesResourceWithStreamingResponse:
+    def with_streaming_response(self) -> AsyncQueryResourceWithStreamingResponse:
         """
         An alternative to `.with_raw_response` that doesn't eagerly read the response body.
 
         For more information, see https://www.github.com/stainless-sdks/tractorbeam-python#with_streaming_response
         """
-        return AsyncQueriesResourceWithStreamingResponse(self)
+        return AsyncQueryResourceWithStreamingResponse(self)
 
-    async def decode(
+    async def restrict(
         self,
         *,
         depth: int,
@@ -121,10 +120,9 @@ class AsyncQueriesResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
-    ) -> QueryDecodeResponse:
+    ) -> QueryRestrictResponse:
         """
-        Execute a keyword branch query across multiple graphs, extracting keywords from
-        natural language and exploring the graph structure around those keywords.
+        Execute a natural language query across multiple graphs.
 
         Args:
           extra_headers: Send extra headers
@@ -136,53 +134,53 @@ class AsyncQueriesResource(AsyncAPIResource):
           timeout: Override the client-level default timeout for this request, in seconds
         """
         return await self._post(
-            "/queries/decode",
+            "/query",
             body=await async_maybe_transform(
                 {
                     "depth": depth,
                     "graph_names": graph_names,
                     "query": query,
                 },
-                query_decode_params.QueryDecodeParams,
+                query_restrict_params.QueryRestrictParams,
             ),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=QueryDecodeResponse,
+            cast_to=QueryRestrictResponse,
         )
 
 
-class QueriesResourceWithRawResponse:
-    def __init__(self, queries: QueriesResource) -> None:
-        self._queries = queries
+class QueryResourceWithRawResponse:
+    def __init__(self, query: QueryResource) -> None:
+        self._query = query
 
-        self.decode = to_raw_response_wrapper(
-            queries.decode,
+        self.restrict = to_raw_response_wrapper(
+            query.restrict,
         )
 
 
-class AsyncQueriesResourceWithRawResponse:
-    def __init__(self, queries: AsyncQueriesResource) -> None:
-        self._queries = queries
+class AsyncQueryResourceWithRawResponse:
+    def __init__(self, query: AsyncQueryResource) -> None:
+        self._query = query
 
-        self.decode = async_to_raw_response_wrapper(
-            queries.decode,
+        self.restrict = async_to_raw_response_wrapper(
+            query.restrict,
         )
 
 
-class QueriesResourceWithStreamingResponse:
-    def __init__(self, queries: QueriesResource) -> None:
-        self._queries = queries
+class QueryResourceWithStreamingResponse:
+    def __init__(self, query: QueryResource) -> None:
+        self._query = query
 
-        self.decode = to_streamed_response_wrapper(
-            queries.decode,
+        self.restrict = to_streamed_response_wrapper(
+            query.restrict,
         )
 
 
-class AsyncQueriesResourceWithStreamingResponse:
-    def __init__(self, queries: AsyncQueriesResource) -> None:
-        self._queries = queries
+class AsyncQueryResourceWithStreamingResponse:
+    def __init__(self, query: AsyncQueryResource) -> None:
+        self._query = query
 
-        self.decode = async_to_streamed_response_wrapper(
-            queries.decode,
+        self.restrict = async_to_streamed_response_wrapper(
+            query.restrict,
         )
