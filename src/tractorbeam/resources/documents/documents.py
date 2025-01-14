@@ -87,7 +87,9 @@ class DocumentsResource(SyncAPIResource):
         """Create a new document.
 
         Unlike other endpoints, this endpoint requires data to be
-        sent as `multipart/form-data` rather than JSON.
+        sent as `multipart/form-data` rather than JSON. The only supported file type is
+        PDF with a maximum size of 512MiB. Other file types can be uploaded (with type
+        `application/octet-stream`) but will not be processed into Tuples.
 
         Args:
           name: The name of the document
@@ -251,7 +253,9 @@ class AsyncDocumentsResource(AsyncAPIResource):
         """Create a new document.
 
         Unlike other endpoints, this endpoint requires data to be
-        sent as `multipart/form-data` rather than JSON.
+        sent as `multipart/form-data` rather than JSON. The only supported file type is
+        PDF with a maximum size of 512MiB. Other file types can be uploaded (with type
+        `application/octet-stream`) but will not be processed into Tuples.
 
         Args:
           name: The name of the document
