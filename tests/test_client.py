@@ -729,7 +729,7 @@ class TestTractorbeam:
         with pytest.raises(APITimeoutError):
             self.client.post(
                 "/graphs",
-                body=cast(object, dict(name="name")),
+                body=cast(object, dict(name="artificial-general-intelligence")),
                 cast_to=httpx.Response,
                 options={"headers": {RAW_RESPONSE_HEADER: "stream"}},
             )
@@ -744,7 +744,7 @@ class TestTractorbeam:
         with pytest.raises(APIStatusError):
             self.client.post(
                 "/graphs",
-                body=cast(object, dict(name="name")),
+                body=cast(object, dict(name="artificial-general-intelligence")),
                 cast_to=httpx.Response,
                 options={"headers": {RAW_RESPONSE_HEADER: "stream"}},
             )
@@ -1510,7 +1510,7 @@ class TestAsyncTractorbeam:
         with pytest.raises(APITimeoutError):
             await self.client.post(
                 "/graphs",
-                body=cast(object, dict(name="name")),
+                body=cast(object, dict(name="artificial-general-intelligence")),
                 cast_to=httpx.Response,
                 options={"headers": {RAW_RESPONSE_HEADER: "stream"}},
             )
@@ -1525,7 +1525,7 @@ class TestAsyncTractorbeam:
         with pytest.raises(APIStatusError):
             await self.client.post(
                 "/graphs",
-                body=cast(object, dict(name="name")),
+                body=cast(object, dict(name="artificial-general-intelligence")),
                 cast_to=httpx.Response,
                 options={"headers": {RAW_RESPONSE_HEADER: "stream"}},
             )

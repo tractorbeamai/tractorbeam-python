@@ -90,7 +90,7 @@ client = Tractorbeam()
 
 try:
     client.graphs.create(
-        name="name",
+        name="artificial-general-intelligence",
     )
 except tractorbeam.APIConnectionError as e:
     print("The server could not be reached")
@@ -135,7 +135,7 @@ client = Tractorbeam(
 
 # Or, configure per-request:
 client.with_options(max_retries=5).graphs.create(
-    name="name",
+    name="artificial-general-intelligence",
 )
 ```
 
@@ -160,7 +160,7 @@ client = Tractorbeam(
 
 # Override per-request:
 client.with_options(timeout=5.0).graphs.create(
-    name="name",
+    name="artificial-general-intelligence",
 )
 ```
 
@@ -203,7 +203,7 @@ from tractorbeam import Tractorbeam
 
 client = Tractorbeam()
 response = client.graphs.with_raw_response.create(
-    name="name",
+    name="artificial-general-intelligence",
 )
 print(response.headers.get('X-My-Header'))
 
@@ -223,7 +223,7 @@ To stream the response body, use `.with_streaming_response` instead, which requi
 
 ```python
 with client.graphs.with_streaming_response.create(
-    name="name",
+    name="artificial-general-intelligence",
 ) as response:
     print(response.headers.get("X-My-Header"))
 
