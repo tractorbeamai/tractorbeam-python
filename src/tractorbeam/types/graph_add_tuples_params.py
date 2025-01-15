@@ -5,10 +5,10 @@ from __future__ import annotations
 from typing import Iterable, Optional
 from typing_extensions import Required, TypedDict
 
-__all__ = ["TupleCreateParams", "Tuple"]
+__all__ = ["GraphAddTuplesParams", "Tuple"]
 
 
-class TupleCreateParams(TypedDict, total=False):
+class GraphAddTuplesParams(TypedDict, total=False):
     owner: Required[str]
 
     tuples: Required[Iterable[Tuple]]

@@ -24,7 +24,7 @@ from ._utils import (
     get_async_library,
 )
 from ._version import __version__
-from .resources import health, queries, api_tokens
+from .resources import graphs, health, queries, documents
 from ._streaming import Stream as Stream, AsyncStream as AsyncStream
 from ._exceptions import APIStatusError, TractorbeamError
 from ._base_client import (
@@ -32,8 +32,6 @@ from ._base_client import (
     SyncAPIClient,
     AsyncAPIClient,
 )
-from .resources.graphs import graphs
-from .resources.documents import documents
 
 __all__ = [
     "Timeout",
@@ -48,7 +46,6 @@ __all__ = [
 
 
 class Tractorbeam(SyncAPIClient):
-    api_tokens: api_tokens.APITokensResource
     documents: documents.DocumentsResource
     graphs: graphs.GraphsResource
     health: health.HealthResource
@@ -110,7 +107,6 @@ class Tractorbeam(SyncAPIClient):
             _strict_response_validation=_strict_response_validation,
         )
 
-        self.api_tokens = api_tokens.APITokensResource(self)
         self.documents = documents.DocumentsResource(self)
         self.graphs = graphs.GraphsResource(self)
         self.health = health.HealthResource(self)
@@ -224,7 +220,6 @@ class Tractorbeam(SyncAPIClient):
 
 
 class AsyncTractorbeam(AsyncAPIClient):
-    api_tokens: api_tokens.AsyncAPITokensResource
     documents: documents.AsyncDocumentsResource
     graphs: graphs.AsyncGraphsResource
     health: health.AsyncHealthResource
@@ -286,7 +281,6 @@ class AsyncTractorbeam(AsyncAPIClient):
             _strict_response_validation=_strict_response_validation,
         )
 
-        self.api_tokens = api_tokens.AsyncAPITokensResource(self)
         self.documents = documents.AsyncDocumentsResource(self)
         self.graphs = graphs.AsyncGraphsResource(self)
         self.health = health.AsyncHealthResource(self)
@@ -401,7 +395,6 @@ class AsyncTractorbeam(AsyncAPIClient):
 
 class TractorbeamWithRawResponse:
     def __init__(self, client: Tractorbeam) -> None:
-        self.api_tokens = api_tokens.APITokensResourceWithRawResponse(client.api_tokens)
         self.documents = documents.DocumentsResourceWithRawResponse(client.documents)
         self.graphs = graphs.GraphsResourceWithRawResponse(client.graphs)
         self.health = health.HealthResourceWithRawResponse(client.health)
@@ -410,7 +403,6 @@ class TractorbeamWithRawResponse:
 
 class AsyncTractorbeamWithRawResponse:
     def __init__(self, client: AsyncTractorbeam) -> None:
-        self.api_tokens = api_tokens.AsyncAPITokensResourceWithRawResponse(client.api_tokens)
         self.documents = documents.AsyncDocumentsResourceWithRawResponse(client.documents)
         self.graphs = graphs.AsyncGraphsResourceWithRawResponse(client.graphs)
         self.health = health.AsyncHealthResourceWithRawResponse(client.health)
@@ -419,7 +411,6 @@ class AsyncTractorbeamWithRawResponse:
 
 class TractorbeamWithStreamedResponse:
     def __init__(self, client: Tractorbeam) -> None:
-        self.api_tokens = api_tokens.APITokensResourceWithStreamingResponse(client.api_tokens)
         self.documents = documents.DocumentsResourceWithStreamingResponse(client.documents)
         self.graphs = graphs.GraphsResourceWithStreamingResponse(client.graphs)
         self.health = health.HealthResourceWithStreamingResponse(client.health)
@@ -428,7 +419,6 @@ class TractorbeamWithStreamedResponse:
 
 class AsyncTractorbeamWithStreamedResponse:
     def __init__(self, client: AsyncTractorbeam) -> None:
-        self.api_tokens = api_tokens.AsyncAPITokensResourceWithStreamingResponse(client.api_tokens)
         self.documents = documents.AsyncDocumentsResourceWithStreamingResponse(client.documents)
         self.graphs = graphs.AsyncGraphsResourceWithStreamingResponse(client.graphs)
         self.health = health.AsyncHealthResourceWithStreamingResponse(client.health)

@@ -32,22 +32,8 @@ from .documents import (
     DocumentsResourceWithStreamingResponse,
     AsyncDocumentsResourceWithStreamingResponse,
 )
-from .api_tokens import (
-    APITokensResource,
-    AsyncAPITokensResource,
-    APITokensResourceWithRawResponse,
-    AsyncAPITokensResourceWithRawResponse,
-    APITokensResourceWithStreamingResponse,
-    AsyncAPITokensResourceWithStreamingResponse,
-)
 
 __all__ = [
-    "APITokensResource",
-    "AsyncAPITokensResource",
-    "APITokensResourceWithRawResponse",
-    "AsyncAPITokensResourceWithRawResponse",
-    "APITokensResourceWithStreamingResponse",
-    "AsyncAPITokensResourceWithStreamingResponse",
     "DocumentsResource",
     "AsyncDocumentsResource",
     "DocumentsResourceWithRawResponse",

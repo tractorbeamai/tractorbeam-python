@@ -4,9 +4,9 @@ from __future__ import annotations
 
 from typing_extensions import TypedDict
 
-__all__ = ["TupleRetrieveParams"]
+__all__ = ["DocumentTuplesParams"]
 
 
-class TupleRetrieveParams(TypedDict, total=False):
+class DocumentTuplesParams(TypedDict, total=False):
     stream: bool
     """Whether to stream the tuples back as a stream of JSON server-sent events"""

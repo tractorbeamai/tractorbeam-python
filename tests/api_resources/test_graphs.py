@@ -9,7 +9,11 @@ import pytest
 
 from tests.utils import assert_matches_type
 from tractorbeam import Tractorbeam, AsyncTractorbeam
-from tractorbeam.types import Graph, GraphListResponse, GraphQueryResponse
+from tractorbeam.types import (
+    Graph,
+    GraphListResponse,
+    GraphAddTuplesResponse,
+)
 
 base_url = os.environ.get("TEST_API_BASE_URL", "http://127.0.0.1:4010")
 
@@ -47,54 +51,6 @@ class TestGraphs:
             assert_matches_type(Graph, graph, path=["response"])
 
         assert cast(Any, response.is_closed) is True
-
-    @parametrize
-    def test_method_retrieve(self, client: Tractorbeam) -> None:
-        graph = client.graphs.retrieve(
-            name="my_graph",
-            owner="org_2nlswGH0pZ1V1OlHYAUwQG6TVBx",
-        )
-        assert_matches_type(Graph, graph, path=["response"])
-
-    @parametrize
-    def test_raw_response_retrieve(self, client: Tractorbeam) -> None:
-        response = client.graphs.with_raw_response.retrieve(
-            name="my_graph",
-            owner="org_2nlswGH0pZ1V1OlHYAUwQG6TVBx",
-        )
-
-        assert response.is_closed is True
-        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
-        graph = response.parse()
-        assert_matches_type(Graph, graph, path=["response"])
-
-    @parametrize
-    def test_streaming_response_retrieve(self, client: Tractorbeam) -> None:
-        with client.graphs.with_streaming_response.retrieve(
-            name="my_graph",
-            owner="org_2nlswGH0pZ1V1OlHYAUwQG6TVBx",
-        ) as response:
-            assert not response.is_closed
-            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
-
-            graph = response.parse()
-            assert_matches_type(Graph, graph, path=["response"])
-
-        assert cast(Any, response.is_closed) is True
-
-    @parametrize
-    def test_path_params_retrieve(self, client: Tractorbeam) -> None:
-        with pytest.raises(ValueError, match=r"Expected a non-empty value for `owner` but received ''"):
-            client.graphs.with_raw_response.retrieve(
-                name="my_graph",
-                owner="",
-            )
-
-        with pytest.raises(ValueError, match=r"Expected a non-empty value for `name` but received ''"):
-            client.graphs.with_raw_response.retrieve(
-                name="",
-                owner="org_2nlswGH0pZ1V1OlHYAUwQG6TVBx",
-            )
 
     @parametrize
     def test_method_list(self, client: Tractorbeam) -> None:
@@ -170,56 +126,150 @@ class TestGraphs:
             )
 
     @parametrize
-    def test_method_query(self, client: Tractorbeam) -> None:
-        graph = client.graphs.query(
+    def test_method_add_tuples(self, client: Tractorbeam) -> None:
+        graph = client.graphs.add_tuples(
             name="graph-name",
             owner="graph-owner",
-            sparql="sparql",
+            tuples=[
+                {
+                    "object": "Tractorbeam",
+                    "predicate": "works_at",
+                    "subject": "Wade",
+                }
+            ],
         )
-        assert_matches_type(GraphQueryResponse, graph, path=["response"])
+        assert_matches_type(GraphAddTuplesResponse, graph, path=["response"])
 
     @parametrize
-    def test_raw_response_query(self, client: Tractorbeam) -> None:
-        response = client.graphs.with_raw_response.query(
+    def test_method_add_tuples_with_all_params(self, client: Tractorbeam) -> None:
+        graph = client.graphs.add_tuples(
             name="graph-name",
             owner="graph-owner",
-            sparql="sparql",
+            tuples=[
+                {
+                    "object": "Tractorbeam",
+                    "predicate": "works_at",
+                    "subject": "Wade",
+                }
+            ],
+            embeddings=[[0]],
+        )
+        assert_matches_type(GraphAddTuplesResponse, graph, path=["response"])
+
+    @parametrize
+    def test_raw_response_add_tuples(self, client: Tractorbeam) -> None:
+        response = client.graphs.with_raw_response.add_tuples(
+            name="graph-name",
+            owner="graph-owner",
+            tuples=[
+                {
+                    "object": "Tractorbeam",
+                    "predicate": "works_at",
+                    "subject": "Wade",
+                }
+            ],
         )
 
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         graph = response.parse()
-        assert_matches_type(GraphQueryResponse, graph, path=["response"])
+        assert_matches_type(GraphAddTuplesResponse, graph, path=["response"])
 
     @parametrize
-    def test_streaming_response_query(self, client: Tractorbeam) -> None:
-        with client.graphs.with_streaming_response.query(
+    def test_streaming_response_add_tuples(self, client: Tractorbeam) -> None:
+        with client.graphs.with_streaming_response.add_tuples(
             name="graph-name",
             owner="graph-owner",
-            sparql="sparql",
+            tuples=[
+                {
+                    "object": "Tractorbeam",
+                    "predicate": "works_at",
+                    "subject": "Wade",
+                }
+            ],
         ) as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             graph = response.parse()
-            assert_matches_type(GraphQueryResponse, graph, path=["response"])
+            assert_matches_type(GraphAddTuplesResponse, graph, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 
     @parametrize
-    def test_path_params_query(self, client: Tractorbeam) -> None:
+    def test_path_params_add_tuples(self, client: Tractorbeam) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `owner` but received ''"):
-            client.graphs.with_raw_response.query(
+            client.graphs.with_raw_response.add_tuples(
                 name="graph-name",
                 owner="",
-                sparql="sparql",
+                tuples=[
+                    {
+                        "object": "Tractorbeam",
+                        "predicate": "works_at",
+                        "subject": "Wade",
+                    }
+                ],
             )
 
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `name` but received ''"):
-            client.graphs.with_raw_response.query(
+            client.graphs.with_raw_response.add_tuples(
                 name="",
                 owner="graph-owner",
-                sparql="sparql",
+                tuples=[
+                    {
+                        "object": "Tractorbeam",
+                        "predicate": "works_at",
+                        "subject": "Wade",
+                    }
+                ],
+            )
+
+    @parametrize
+    def test_method_get(self, client: Tractorbeam) -> None:
+        graph = client.graphs.get(
+            name="my_graph",
+            owner="org_2nlswGH0pZ1V1OlHYAUwQG6TVBx",
+        )
+        assert_matches_type(Graph, graph, path=["response"])
+
+    @parametrize
+    def test_raw_response_get(self, client: Tractorbeam) -> None:
+        response = client.graphs.with_raw_response.get(
+            name="my_graph",
+            owner="org_2nlswGH0pZ1V1OlHYAUwQG6TVBx",
+        )
+
+        assert response.is_closed is True
+        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+        graph = response.parse()
+        assert_matches_type(Graph, graph, path=["response"])
+
+    @parametrize
+    def test_streaming_response_get(self, client: Tractorbeam) -> None:
+        with client.graphs.with_streaming_response.get(
+            name="my_graph",
+            owner="org_2nlswGH0pZ1V1OlHYAUwQG6TVBx",
+        ) as response:
+            assert not response.is_closed
+            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+
+            graph = response.parse()
+            assert_matches_type(Graph, graph, path=["response"])
+
+        assert cast(Any, response.is_closed) is True
+
+    @parametrize
+    def test_path_params_get(self, client: Tractorbeam) -> None:
+        with pytest.raises(ValueError, match=r"Expected a non-empty value for `owner` but received ''"):
+            client.graphs.with_raw_response.get(
+                name="my_graph",
+                owner="",
+            )
+
+        with pytest.raises(ValueError, match=r"Expected a non-empty value for `name` but received ''"):
+            client.graphs.with_raw_response.get(
+                name="",
+                owner="org_2nlswGH0pZ1V1OlHYAUwQG6TVBx",
             )
 
 
@@ -256,54 +306,6 @@ class TestAsyncGraphs:
             assert_matches_type(Graph, graph, path=["response"])
 
         assert cast(Any, response.is_closed) is True
-
-    @parametrize
-    async def test_method_retrieve(self, async_client: AsyncTractorbeam) -> None:
-        graph = await async_client.graphs.retrieve(
-            name="my_graph",
-            owner="org_2nlswGH0pZ1V1OlHYAUwQG6TVBx",
-        )
-        assert_matches_type(Graph, graph, path=["response"])
-
-    @parametrize
-    async def test_raw_response_retrieve(self, async_client: AsyncTractorbeam) -> None:
-        response = await async_client.graphs.with_raw_response.retrieve(
-            name="my_graph",
-            owner="org_2nlswGH0pZ1V1OlHYAUwQG6TVBx",
-        )
-
-        assert response.is_closed is True
-        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
-        graph = await response.parse()
-        assert_matches_type(Graph, graph, path=["response"])
-
-    @parametrize
-    async def test_streaming_response_retrieve(self, async_client: AsyncTractorbeam) -> None:
-        async with async_client.graphs.with_streaming_response.retrieve(
-            name="my_graph",
-            owner="org_2nlswGH0pZ1V1OlHYAUwQG6TVBx",
-        ) as response:
-            assert not response.is_closed
-            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
-
-            graph = await response.parse()
-            assert_matches_type(Graph, graph, path=["response"])
-
-        assert cast(Any, response.is_closed) is True
-
-    @parametrize
-    async def test_path_params_retrieve(self, async_client: AsyncTractorbeam) -> None:
-        with pytest.raises(ValueError, match=r"Expected a non-empty value for `owner` but received ''"):
-            await async_client.graphs.with_raw_response.retrieve(
-                name="my_graph",
-                owner="",
-            )
-
-        with pytest.raises(ValueError, match=r"Expected a non-empty value for `name` but received ''"):
-            await async_client.graphs.with_raw_response.retrieve(
-                name="",
-                owner="org_2nlswGH0pZ1V1OlHYAUwQG6TVBx",
-            )
 
     @parametrize
     async def test_method_list(self, async_client: AsyncTractorbeam) -> None:
@@ -379,54 +381,148 @@ class TestAsyncGraphs:
             )
 
     @parametrize
-    async def test_method_query(self, async_client: AsyncTractorbeam) -> None:
-        graph = await async_client.graphs.query(
+    async def test_method_add_tuples(self, async_client: AsyncTractorbeam) -> None:
+        graph = await async_client.graphs.add_tuples(
             name="graph-name",
             owner="graph-owner",
-            sparql="sparql",
+            tuples=[
+                {
+                    "object": "Tractorbeam",
+                    "predicate": "works_at",
+                    "subject": "Wade",
+                }
+            ],
         )
-        assert_matches_type(GraphQueryResponse, graph, path=["response"])
+        assert_matches_type(GraphAddTuplesResponse, graph, path=["response"])
 
     @parametrize
-    async def test_raw_response_query(self, async_client: AsyncTractorbeam) -> None:
-        response = await async_client.graphs.with_raw_response.query(
+    async def test_method_add_tuples_with_all_params(self, async_client: AsyncTractorbeam) -> None:
+        graph = await async_client.graphs.add_tuples(
             name="graph-name",
             owner="graph-owner",
-            sparql="sparql",
+            tuples=[
+                {
+                    "object": "Tractorbeam",
+                    "predicate": "works_at",
+                    "subject": "Wade",
+                }
+            ],
+            embeddings=[[0]],
+        )
+        assert_matches_type(GraphAddTuplesResponse, graph, path=["response"])
+
+    @parametrize
+    async def test_raw_response_add_tuples(self, async_client: AsyncTractorbeam) -> None:
+        response = await async_client.graphs.with_raw_response.add_tuples(
+            name="graph-name",
+            owner="graph-owner",
+            tuples=[
+                {
+                    "object": "Tractorbeam",
+                    "predicate": "works_at",
+                    "subject": "Wade",
+                }
+            ],
         )
 
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         graph = await response.parse()
-        assert_matches_type(GraphQueryResponse, graph, path=["response"])
+        assert_matches_type(GraphAddTuplesResponse, graph, path=["response"])
 
     @parametrize
-    async def test_streaming_response_query(self, async_client: AsyncTractorbeam) -> None:
-        async with async_client.graphs.with_streaming_response.query(
+    async def test_streaming_response_add_tuples(self, async_client: AsyncTractorbeam) -> None:
+        async with async_client.graphs.with_streaming_response.add_tuples(
             name="graph-name",
             owner="graph-owner",
-            sparql="sparql",
+            tuples=[
+                {
+                    "object": "Tractorbeam",
+                    "predicate": "works_at",
+                    "subject": "Wade",
+                }
+            ],
         ) as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             graph = await response.parse()
-            assert_matches_type(GraphQueryResponse, graph, path=["response"])
+            assert_matches_type(GraphAddTuplesResponse, graph, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 
     @parametrize
-    async def test_path_params_query(self, async_client: AsyncTractorbeam) -> None:
+    async def test_path_params_add_tuples(self, async_client: AsyncTractorbeam) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `owner` but received ''"):
-            await async_client.graphs.with_raw_response.query(
+            await async_client.graphs.with_raw_response.add_tuples(
                 name="graph-name",
                 owner="",
-                sparql="sparql",
+                tuples=[
+                    {
+                        "object": "Tractorbeam",
+                        "predicate": "works_at",
+                        "subject": "Wade",
+                    }
+                ],
             )
 
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `name` but received ''"):
-            await async_client.graphs.with_raw_response.query(
+            await async_client.graphs.with_raw_response.add_tuples(
                 name="",
                 owner="graph-owner",
-                sparql="sparql",
+                tuples=[
+                    {
+                        "object": "Tractorbeam",
+                        "predicate": "works_at",
+                        "subject": "Wade",
+                    }
+                ],
+            )
+
+    @parametrize
+    async def test_method_get(self, async_client: AsyncTractorbeam) -> None:
+        graph = await async_client.graphs.get(
+            name="my_graph",
+            owner="org_2nlswGH0pZ1V1OlHYAUwQG6TVBx",
+        )
+        assert_matches_type(Graph, graph, path=["response"])
+
+    @parametrize
+    async def test_raw_response_get(self, async_client: AsyncTractorbeam) -> None:
+        response = await async_client.graphs.with_raw_response.get(
+            name="my_graph",
+            owner="org_2nlswGH0pZ1V1OlHYAUwQG6TVBx",
+        )
+
+        assert response.is_closed is True
+        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+        graph = await response.parse()
+        assert_matches_type(Graph, graph, path=["response"])
+
+    @parametrize
+    async def test_streaming_response_get(self, async_client: AsyncTractorbeam) -> None:
+        async with async_client.graphs.with_streaming_response.get(
+            name="my_graph",
+            owner="org_2nlswGH0pZ1V1OlHYAUwQG6TVBx",
+        ) as response:
+            assert not response.is_closed
+            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+
+            graph = await response.parse()
+            assert_matches_type(Graph, graph, path=["response"])
+
+        assert cast(Any, response.is_closed) is True
+
+    @parametrize
+    async def test_path_params_get(self, async_client: AsyncTractorbeam) -> None:
+        with pytest.raises(ValueError, match=r"Expected a non-empty value for `owner` but received ''"):
+            await async_client.graphs.with_raw_response.get(
+                name="my_graph",
+                owner="",
+            )
+
+        with pytest.raises(ValueError, match=r"Expected a non-empty value for `name` but received ''"):
+            await async_client.graphs.with_raw_response.get(
+                name="",
+                owner="org_2nlswGH0pZ1V1OlHYAUwQG6TVBx",
             )
