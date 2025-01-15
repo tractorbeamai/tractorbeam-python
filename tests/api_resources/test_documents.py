@@ -9,7 +9,11 @@ import pytest
 
 from tests.utils import assert_matches_type
 from tractorbeam import Tractorbeam, AsyncTractorbeam
-from tractorbeam.types import Document, DocumentListResponse
+from tractorbeam.types import (
+    Document,
+    DocumentContents,
+    DocumentListResponse,
+)
 
 base_url = os.environ.get("TEST_API_BASE_URL", "http://127.0.0.1:4010")
 
@@ -56,44 +60,6 @@ class TestDocuments:
             assert_matches_type(Document, document, path=["response"])
 
         assert cast(Any, response.is_closed) is True
-
-    @parametrize
-    def test_method_retrieve(self, client: Tractorbeam) -> None:
-        document = client.documents.retrieve(
-            "id",
-        )
-        assert_matches_type(Document, document, path=["response"])
-
-    @parametrize
-    def test_raw_response_retrieve(self, client: Tractorbeam) -> None:
-        response = client.documents.with_raw_response.retrieve(
-            "id",
-        )
-
-        assert response.is_closed is True
-        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
-        document = response.parse()
-        assert_matches_type(Document, document, path=["response"])
-
-    @parametrize
-    def test_streaming_response_retrieve(self, client: Tractorbeam) -> None:
-        with client.documents.with_streaming_response.retrieve(
-            "id",
-        ) as response:
-            assert not response.is_closed
-            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
-
-            document = response.parse()
-            assert_matches_type(Document, document, path=["response"])
-
-        assert cast(Any, response.is_closed) is True
-
-    @parametrize
-    def test_path_params_retrieve(self, client: Tractorbeam) -> None:
-        with pytest.raises(ValueError, match=r"Expected a non-empty value for `id` but received ''"):
-            client.documents.with_raw_response.retrieve(
-                "",
-            )
 
     @parametrize
     def test_method_list(self, client: Tractorbeam) -> None:
@@ -158,6 +124,128 @@ class TestDocuments:
                 "",
             )
 
+    @parametrize
+    def test_method_contents(self, client: Tractorbeam) -> None:
+        document = client.documents.contents(
+            "id",
+        )
+        assert_matches_type(DocumentContents, document, path=["response"])
+
+    @parametrize
+    def test_raw_response_contents(self, client: Tractorbeam) -> None:
+        response = client.documents.with_raw_response.contents(
+            "id",
+        )
+
+        assert response.is_closed is True
+        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+        document = response.parse()
+        assert_matches_type(DocumentContents, document, path=["response"])
+
+    @parametrize
+    def test_streaming_response_contents(self, client: Tractorbeam) -> None:
+        with client.documents.with_streaming_response.contents(
+            "id",
+        ) as response:
+            assert not response.is_closed
+            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+
+            document = response.parse()
+            assert_matches_type(DocumentContents, document, path=["response"])
+
+        assert cast(Any, response.is_closed) is True
+
+    @parametrize
+    def test_path_params_contents(self, client: Tractorbeam) -> None:
+        with pytest.raises(ValueError, match=r"Expected a non-empty value for `id` but received ''"):
+            client.documents.with_raw_response.contents(
+                "",
+            )
+
+    @parametrize
+    def test_method_get(self, client: Tractorbeam) -> None:
+        document = client.documents.get(
+            "id",
+        )
+        assert_matches_type(Document, document, path=["response"])
+
+    @parametrize
+    def test_raw_response_get(self, client: Tractorbeam) -> None:
+        response = client.documents.with_raw_response.get(
+            "id",
+        )
+
+        assert response.is_closed is True
+        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+        document = response.parse()
+        assert_matches_type(Document, document, path=["response"])
+
+    @parametrize
+    def test_streaming_response_get(self, client: Tractorbeam) -> None:
+        with client.documents.with_streaming_response.get(
+            "id",
+        ) as response:
+            assert not response.is_closed
+            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+
+            document = response.parse()
+            assert_matches_type(Document, document, path=["response"])
+
+        assert cast(Any, response.is_closed) is True
+
+    @parametrize
+    def test_path_params_get(self, client: Tractorbeam) -> None:
+        with pytest.raises(ValueError, match=r"Expected a non-empty value for `id` but received ''"):
+            client.documents.with_raw_response.get(
+                "",
+            )
+
+    @parametrize
+    def test_method_tuples(self, client: Tractorbeam) -> None:
+        document = client.documents.tuples(
+            id="doc_2yYISEvrO9LrLAOJjnw27",
+        )
+        assert document is None
+
+    @parametrize
+    def test_method_tuples_with_all_params(self, client: Tractorbeam) -> None:
+        document = client.documents.tuples(
+            id="doc_2yYISEvrO9LrLAOJjnw27",
+            stream=True,
+        )
+        assert document is None
+
+    @parametrize
+    def test_raw_response_tuples(self, client: Tractorbeam) -> None:
+        response = client.documents.with_raw_response.tuples(
+            id="doc_2yYISEvrO9LrLAOJjnw27",
+        )
+
+        assert response.is_closed is True
+        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+        document = response.parse()
+        assert document is None
+
+    @parametrize
+    def test_streaming_response_tuples(self, client: Tractorbeam) -> None:
+        with client.documents.with_streaming_response.tuples(
+            id="doc_2yYISEvrO9LrLAOJjnw27",
+        ) as response:
+            assert not response.is_closed
+            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+
+            document = response.parse()
+            assert document is None
+
+        assert cast(Any, response.is_closed) is True
+
+    @parametrize
+    def test_path_params_tuples(self, client: Tractorbeam) -> None:
+        with pytest.raises(ValueError, match=r"Expected a non-empty value for `id` but received ''"):
+            client.documents.with_raw_response.tuples(
+                id="",
+            )
+
 
 class TestAsyncDocuments:
     parametrize = pytest.mark.parametrize("async_client", [False, True], indirect=True, ids=["loose", "strict"])
@@ -201,44 +289,6 @@ class TestAsyncDocuments:
             assert_matches_type(Document, document, path=["response"])
 
         assert cast(Any, response.is_closed) is True
-
-    @parametrize
-    async def test_method_retrieve(self, async_client: AsyncTractorbeam) -> None:
-        document = await async_client.documents.retrieve(
-            "id",
-        )
-        assert_matches_type(Document, document, path=["response"])
-
-    @parametrize
-    async def test_raw_response_retrieve(self, async_client: AsyncTractorbeam) -> None:
-        response = await async_client.documents.with_raw_response.retrieve(
-            "id",
-        )
-
-        assert response.is_closed is True
-        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
-        document = await response.parse()
-        assert_matches_type(Document, document, path=["response"])
-
-    @parametrize
-    async def test_streaming_response_retrieve(self, async_client: AsyncTractorbeam) -> None:
-        async with async_client.documents.with_streaming_response.retrieve(
-            "id",
-        ) as response:
-            assert not response.is_closed
-            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
-
-            document = await response.parse()
-            assert_matches_type(Document, document, path=["response"])
-
-        assert cast(Any, response.is_closed) is True
-
-    @parametrize
-    async def test_path_params_retrieve(self, async_client: AsyncTractorbeam) -> None:
-        with pytest.raises(ValueError, match=r"Expected a non-empty value for `id` but received ''"):
-            await async_client.documents.with_raw_response.retrieve(
-                "",
-            )
 
     @parametrize
     async def test_method_list(self, async_client: AsyncTractorbeam) -> None:
@@ -301,4 +351,126 @@ class TestAsyncDocuments:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `id` but received ''"):
             await async_client.documents.with_raw_response.delete(
                 "",
+            )
+
+    @parametrize
+    async def test_method_contents(self, async_client: AsyncTractorbeam) -> None:
+        document = await async_client.documents.contents(
+            "id",
+        )
+        assert_matches_type(DocumentContents, document, path=["response"])
+
+    @parametrize
+    async def test_raw_response_contents(self, async_client: AsyncTractorbeam) -> None:
+        response = await async_client.documents.with_raw_response.contents(
+            "id",
+        )
+
+        assert response.is_closed is True
+        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+        document = await response.parse()
+        assert_matches_type(DocumentContents, document, path=["response"])
+
+    @parametrize
+    async def test_streaming_response_contents(self, async_client: AsyncTractorbeam) -> None:
+        async with async_client.documents.with_streaming_response.contents(
+            "id",
+        ) as response:
+            assert not response.is_closed
+            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+
+            document = await response.parse()
+            assert_matches_type(DocumentContents, document, path=["response"])
+
+        assert cast(Any, response.is_closed) is True
+
+    @parametrize
+    async def test_path_params_contents(self, async_client: AsyncTractorbeam) -> None:
+        with pytest.raises(ValueError, match=r"Expected a non-empty value for `id` but received ''"):
+            await async_client.documents.with_raw_response.contents(
+                "",
+            )
+
+    @parametrize
+    async def test_method_get(self, async_client: AsyncTractorbeam) -> None:
+        document = await async_client.documents.get(
+            "id",
+        )
+        assert_matches_type(Document, document, path=["response"])
+
+    @parametrize
+    async def test_raw_response_get(self, async_client: AsyncTractorbeam) -> None:
+        response = await async_client.documents.with_raw_response.get(
+            "id",
+        )
+
+        assert response.is_closed is True
+        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+        document = await response.parse()
+        assert_matches_type(Document, document, path=["response"])
+
+    @parametrize
+    async def test_streaming_response_get(self, async_client: AsyncTractorbeam) -> None:
+        async with async_client.documents.with_streaming_response.get(
+            "id",
+        ) as response:
+            assert not response.is_closed
+            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+
+            document = await response.parse()
+            assert_matches_type(Document, document, path=["response"])
+
+        assert cast(Any, response.is_closed) is True
+
+    @parametrize
+    async def test_path_params_get(self, async_client: AsyncTractorbeam) -> None:
+        with pytest.raises(ValueError, match=r"Expected a non-empty value for `id` but received ''"):
+            await async_client.documents.with_raw_response.get(
+                "",
+            )
+
+    @parametrize
+    async def test_method_tuples(self, async_client: AsyncTractorbeam) -> None:
+        document = await async_client.documents.tuples(
+            id="doc_2yYISEvrO9LrLAOJjnw27",
+        )
+        assert document is None
+
+    @parametrize
+    async def test_method_tuples_with_all_params(self, async_client: AsyncTractorbeam) -> None:
+        document = await async_client.documents.tuples(
+            id="doc_2yYISEvrO9LrLAOJjnw27",
+            stream=True,
+        )
+        assert document is None
+
+    @parametrize
+    async def test_raw_response_tuples(self, async_client: AsyncTractorbeam) -> None:
+        response = await async_client.documents.with_raw_response.tuples(
+            id="doc_2yYISEvrO9LrLAOJjnw27",
+        )
+
+        assert response.is_closed is True
+        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+        document = await response.parse()
+        assert document is None
+
+    @parametrize
+    async def test_streaming_response_tuples(self, async_client: AsyncTractorbeam) -> None:
+        async with async_client.documents.with_streaming_response.tuples(
+            id="doc_2yYISEvrO9LrLAOJjnw27",
+        ) as response:
+            assert not response.is_closed
+            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+
+            document = await response.parse()
+            assert document is None
+
+        assert cast(Any, response.is_closed) is True
+
+    @parametrize
+    async def test_path_params_tuples(self, async_client: AsyncTractorbeam) -> None:
+        with pytest.raises(ValueError, match=r"Expected a non-empty value for `id` but received ''"):
+            await async_client.documents.with_raw_response.tuples(
+                id="",
             )

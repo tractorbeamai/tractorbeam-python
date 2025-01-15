@@ -2,43 +2,33 @@
 
 from __future__ import annotations
 
+from typing import Iterable, Optional
+
 import httpx
 
-from .tuples import (
-    TuplesResource,
-    AsyncTuplesResource,
-    TuplesResourceWithRawResponse,
-    AsyncTuplesResourceWithRawResponse,
-    TuplesResourceWithStreamingResponse,
-    AsyncTuplesResourceWithStreamingResponse,
-)
-from ...types import graph_query_params, graph_create_params
-from ..._types import NOT_GIVEN, Body, Query, Headers, NoneType, NotGiven
-from ..._utils import (
+from ..types import graph_create_params, graph_add_tuples_params
+from .._types import NOT_GIVEN, Body, Query, Headers, NoneType, NotGiven
+from .._utils import (
     maybe_transform,
     async_maybe_transform,
 )
-from ..._compat import cached_property
-from ..._resource import SyncAPIResource, AsyncAPIResource
-from ..._response import (
+from .._compat import cached_property
+from .._resource import SyncAPIResource, AsyncAPIResource
+from .._response import (
     to_raw_response_wrapper,
     to_streamed_response_wrapper,
     async_to_raw_response_wrapper,
     async_to_streamed_response_wrapper,
 )
-from ...types.graph import Graph
-from ..._base_client import make_request_options
-from ...types.graph_list_response import GraphListResponse
-from ...types.graph_query_response import GraphQueryResponse
+from ..types.graph import Graph
+from .._base_client import make_request_options
+from ..types.graph_list_response import GraphListResponse
+from ..types.graph_add_tuples_response import GraphAddTuplesResponse
 
 __all__ = ["GraphsResource", "AsyncGraphsResource"]
 
 
 class GraphsResource(SyncAPIResource):
-    @cached_property
-    def tuples(self) -> TuplesResource:
-        return TuplesResource(self._client)
-
     @cached_property
     def with_raw_response(self) -> GraphsResourceWithRawResponse:
         """
@@ -84,42 +74,6 @@ class GraphsResource(SyncAPIResource):
         return self._post(
             "/graphs",
             body=maybe_transform({"name": name}, graph_create_params.GraphCreateParams),
-            options=make_request_options(
-                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
-            ),
-            cast_to=Graph,
-        )
-
-    def retrieve(
-        self,
-        name: str,
-        *,
-        owner: str,
-        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
-        # The extra values given here take precedence over values defined on the client or passed to this method.
-        extra_headers: Headers | None = None,
-        extra_query: Query | None = None,
-        extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
-    ) -> Graph:
-        """
-        Get a graph by its owner and name.
-
-        Args:
-          extra_headers: Send extra headers
-
-          extra_query: Add additional query parameters to the request
-
-          extra_body: Add additional JSON properties to the request
-
-          timeout: Override the client-level default timeout for this request, in seconds
-        """
-        if not owner:
-            raise ValueError(f"Expected a non-empty value for `owner` but received {owner!r}")
-        if not name:
-            raise ValueError(f"Expected a non-empty value for `name` but received {name!r}")
-        return self._get(
-            f"/graphs/{owner}/{name}",
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
@@ -182,21 +136,22 @@ class GraphsResource(SyncAPIResource):
             cast_to=NoneType,
         )
 
-    def query(
+    def add_tuples(
         self,
         name: str,
         *,
         owner: str,
-        sparql: str,
+        tuples: Iterable[graph_add_tuples_params.Tuple],
+        embeddings: Optional[Iterable[Iterable[float]]] | NotGiven = NOT_GIVEN,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
-    ) -> GraphQueryResponse:
+    ) -> GraphAddTuplesResponse:
         """
-        Query tuples from an existing graph using a SPARQL query.
+        Insert tuples into an existing graph.
 
         Args:
           extra_headers: Send extra headers
@@ -212,20 +167,58 @@ class GraphsResource(SyncAPIResource):
         if not name:
             raise ValueError(f"Expected a non-empty value for `name` but received {name!r}")
         return self._post(
-            f"/graphs/{owner}/{name}/query",
-            body=maybe_transform({"sparql": sparql}, graph_query_params.GraphQueryParams),
+            f"/graphs/{owner}/{name}/tuples",
+            body=maybe_transform(
+                {
+                    "tuples": tuples,
+                    "embeddings": embeddings,
+                },
+                graph_add_tuples_params.GraphAddTuplesParams,
+            ),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=GraphQueryResponse,
+            cast_to=GraphAddTuplesResponse,
+        )
+
+    def get(
+        self,
+        name: str,
+        *,
+        owner: str,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+    ) -> Graph:
+        """
+        Get a graph by its owner and name.
+
+        Args:
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if not owner:
+            raise ValueError(f"Expected a non-empty value for `owner` but received {owner!r}")
+        if not name:
+            raise ValueError(f"Expected a non-empty value for `name` but received {name!r}")
+        return self._get(
+            f"/graphs/{owner}/{name}",
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
+            cast_to=Graph,
         )
 
 
 class AsyncGraphsResource(AsyncAPIResource):
-    @cached_property
-    def tuples(self) -> AsyncTuplesResource:
-        return AsyncTuplesResource(self._client)
-
     @cached_property
     def with_raw_response(self) -> AsyncGraphsResourceWithRawResponse:
         """
@@ -271,42 +264,6 @@ class AsyncGraphsResource(AsyncAPIResource):
         return await self._post(
             "/graphs",
             body=await async_maybe_transform({"name": name}, graph_create_params.GraphCreateParams),
-            options=make_request_options(
-                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
-            ),
-            cast_to=Graph,
-        )
-
-    async def retrieve(
-        self,
-        name: str,
-        *,
-        owner: str,
-        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
-        # The extra values given here take precedence over values defined on the client or passed to this method.
-        extra_headers: Headers | None = None,
-        extra_query: Query | None = None,
-        extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
-    ) -> Graph:
-        """
-        Get a graph by its owner and name.
-
-        Args:
-          extra_headers: Send extra headers
-
-          extra_query: Add additional query parameters to the request
-
-          extra_body: Add additional JSON properties to the request
-
-          timeout: Override the client-level default timeout for this request, in seconds
-        """
-        if not owner:
-            raise ValueError(f"Expected a non-empty value for `owner` but received {owner!r}")
-        if not name:
-            raise ValueError(f"Expected a non-empty value for `name` but received {name!r}")
-        return await self._get(
-            f"/graphs/{owner}/{name}",
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
@@ -369,21 +326,22 @@ class AsyncGraphsResource(AsyncAPIResource):
             cast_to=NoneType,
         )
 
-    async def query(
+    async def add_tuples(
         self,
         name: str,
         *,
         owner: str,
-        sparql: str,
+        tuples: Iterable[graph_add_tuples_params.Tuple],
+        embeddings: Optional[Iterable[Iterable[float]]] | NotGiven = NOT_GIVEN,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
-    ) -> GraphQueryResponse:
+    ) -> GraphAddTuplesResponse:
         """
-        Query tuples from an existing graph using a SPARQL query.
+        Insert tuples into an existing graph.
 
         Args:
           extra_headers: Send extra headers
@@ -399,12 +357,54 @@ class AsyncGraphsResource(AsyncAPIResource):
         if not name:
             raise ValueError(f"Expected a non-empty value for `name` but received {name!r}")
         return await self._post(
-            f"/graphs/{owner}/{name}/query",
-            body=await async_maybe_transform({"sparql": sparql}, graph_query_params.GraphQueryParams),
+            f"/graphs/{owner}/{name}/tuples",
+            body=await async_maybe_transform(
+                {
+                    "tuples": tuples,
+                    "embeddings": embeddings,
+                },
+                graph_add_tuples_params.GraphAddTuplesParams,
+            ),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=GraphQueryResponse,
+            cast_to=GraphAddTuplesResponse,
+        )
+
+    async def get(
+        self,
+        name: str,
+        *,
+        owner: str,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+    ) -> Graph:
+        """
+        Get a graph by its owner and name.
+
+        Args:
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if not owner:
+            raise ValueError(f"Expected a non-empty value for `owner` but received {owner!r}")
+        if not name:
+            raise ValueError(f"Expected a non-empty value for `name` but received {name!r}")
+        return await self._get(
+            f"/graphs/{owner}/{name}",
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
+            cast_to=Graph,
         )
 
 
@@ -415,22 +415,18 @@ class GraphsResourceWithRawResponse:
         self.create = to_raw_response_wrapper(
             graphs.create,
         )
-        self.retrieve = to_raw_response_wrapper(
-            graphs.retrieve,
-        )
         self.list = to_raw_response_wrapper(
             graphs.list,
         )
         self.delete = to_raw_response_wrapper(
             graphs.delete,
         )
-        self.query = to_raw_response_wrapper(
-            graphs.query,
+        self.add_tuples = to_raw_response_wrapper(
+            graphs.add_tuples,
         )
-
-    @cached_property
-    def tuples(self) -> TuplesResourceWithRawResponse:
-        return TuplesResourceWithRawResponse(self._graphs.tuples)
+        self.get = to_raw_response_wrapper(
+            graphs.get,
+        )
 
 
 class AsyncGraphsResourceWithRawResponse:
@@ -440,22 +436,18 @@ class AsyncGraphsResourceWithRawResponse:
         self.create = async_to_raw_response_wrapper(
             graphs.create,
         )
-        self.retrieve = async_to_raw_response_wrapper(
-            graphs.retrieve,
-        )
         self.list = async_to_raw_response_wrapper(
             graphs.list,
         )
         self.delete = async_to_raw_response_wrapper(
             graphs.delete,
         )
-        self.query = async_to_raw_response_wrapper(
-            graphs.query,
+        self.add_tuples = async_to_raw_response_wrapper(
+            graphs.add_tuples,
         )
-
-    @cached_property
-    def tuples(self) -> AsyncTuplesResourceWithRawResponse:
-        return AsyncTuplesResourceWithRawResponse(self._graphs.tuples)
+        self.get = async_to_raw_response_wrapper(
+            graphs.get,
+        )
 
 
 class GraphsResourceWithStreamingResponse:
@@ -465,22 +457,18 @@ class GraphsResourceWithStreamingResponse:
         self.create = to_streamed_response_wrapper(
             graphs.create,
         )
-        self.retrieve = to_streamed_response_wrapper(
-            graphs.retrieve,
-        )
         self.list = to_streamed_response_wrapper(
             graphs.list,
         )
         self.delete = to_streamed_response_wrapper(
             graphs.delete,
         )
-        self.query = to_streamed_response_wrapper(
-            graphs.query,
+        self.add_tuples = to_streamed_response_wrapper(
+            graphs.add_tuples,
         )
-
-    @cached_property
-    def tuples(self) -> TuplesResourceWithStreamingResponse:
-        return TuplesResourceWithStreamingResponse(self._graphs.tuples)
+        self.get = to_streamed_response_wrapper(
+            graphs.get,
+        )
 
 
 class AsyncGraphsResourceWithStreamingResponse:
@@ -490,19 +478,15 @@ class AsyncGraphsResourceWithStreamingResponse:
         self.create = async_to_streamed_response_wrapper(
             graphs.create,
         )
-        self.retrieve = async_to_streamed_response_wrapper(
-            graphs.retrieve,
-        )
         self.list = async_to_streamed_response_wrapper(
             graphs.list,
         )
         self.delete = async_to_streamed_response_wrapper(
             graphs.delete,
         )
-        self.query = async_to_streamed_response_wrapper(
-            graphs.query,
+        self.add_tuples = async_to_streamed_response_wrapper(
+            graphs.add_tuples,
         )
-
-    @cached_property
-    def tuples(self) -> AsyncTuplesResourceWithStreamingResponse:
-        return AsyncTuplesResourceWithStreamingResponse(self._graphs.tuples)
+        self.get = async_to_streamed_response_wrapper(
+            graphs.get,
+        )
