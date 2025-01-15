@@ -358,11 +358,11 @@ class TestTractorbeam:
             FinalRequestOptions(
                 method="get",
                 url="/foo",
-                params={"foo": "baz", "query_param": "overriden"},
+                params={"foo": "baz", "query_param": "overridden"},
             )
         )
         url = httpx.URL(request.url)
-        assert dict(url.params) == {"foo": "baz", "query_param": "overriden"}
+        assert dict(url.params) == {"foo": "baz", "query_param": "overridden"}
 
     def test_request_extra_json(self) -> None:
         request = self.client._build_request(
@@ -724,11 +724,14 @@ class TestTractorbeam:
     @mock.patch("tractorbeam._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
     @pytest.mark.respx(base_url=base_url)
     def test_retrying_timeout_errors_doesnt_leak(self, respx_mock: MockRouter) -> None:
-        respx_mock.get("/api-tokens/token_123").mock(side_effect=httpx.TimeoutException("Test timeout error"))
+        respx_mock.post("/graphs").mock(side_effect=httpx.TimeoutException("Test timeout error"))
 
         with pytest.raises(APITimeoutError):
-            self.client.get(
-                "/api-tokens/token_123", cast_to=httpx.Response, options={"headers": {RAW_RESPONSE_HEADER: "stream"}}
+            self.client.post(
+                "/graphs",
+                body=cast(object, dict(name="artificial-general-intelligence")),
+                cast_to=httpx.Response,
+                options={"headers": {RAW_RESPONSE_HEADER: "stream"}},
             )
 
         assert _get_open_connections(self.client) == 0
@@ -736,11 +739,14 @@ class TestTractorbeam:
     @mock.patch("tractorbeam._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
     @pytest.mark.respx(base_url=base_url)
     def test_retrying_status_errors_doesnt_leak(self, respx_mock: MockRouter) -> None:
-        respx_mock.get("/api-tokens/token_123").mock(return_value=httpx.Response(500))
+        respx_mock.post("/graphs").mock(return_value=httpx.Response(500))
 
         with pytest.raises(APIStatusError):
-            self.client.get(
-                "/api-tokens/token_123", cast_to=httpx.Response, options={"headers": {RAW_RESPONSE_HEADER: "stream"}}
+            self.client.post(
+                "/graphs",
+                body=cast(object, dict(name="artificial-general-intelligence")),
+                cast_to=httpx.Response,
+                options={"headers": {RAW_RESPONSE_HEADER: "stream"}},
             )
 
         assert _get_open_connections(self.client) == 0
@@ -769,9 +775,9 @@ class TestTractorbeam:
                 return httpx.Response(500)
             return httpx.Response(200)
 
-        respx_mock.get("/api-tokens/token_123").mock(side_effect=retry_handler)
+        respx_mock.post("/graphs").mock(side_effect=retry_handler)
 
-        response = client.api_tokens.with_raw_response.retrieve("id")
+        response = client.graphs.with_raw_response.create(name="name")
 
         assert response.retries_taken == failures_before_success
         assert int(response.http_request.headers.get("x-stainless-retry-count")) == failures_before_success
@@ -793,9 +799,11 @@ class TestTractorbeam:
                 return httpx.Response(500)
             return httpx.Response(200)
 
-        respx_mock.get("/api-tokens/token_123").mock(side_effect=retry_handler)
+        respx_mock.post("/graphs").mock(side_effect=retry_handler)
 
-        response = client.api_tokens.with_raw_response.retrieve("id", extra_headers={"x-stainless-retry-count": Omit()})
+        response = client.graphs.with_raw_response.create(
+            name="name", extra_headers={"x-stainless-retry-count": Omit()}
+        )
 
         assert len(response.http_request.headers.get_list("x-stainless-retry-count")) == 0
 
@@ -816,9 +824,9 @@ class TestTractorbeam:
                 return httpx.Response(500)
             return httpx.Response(200)
 
-        respx_mock.get("/api-tokens/token_123").mock(side_effect=retry_handler)
+        respx_mock.post("/graphs").mock(side_effect=retry_handler)
 
-        response = client.api_tokens.with_raw_response.retrieve("id", extra_headers={"x-stainless-retry-count": "42"})
+        response = client.graphs.with_raw_response.create(name="name", extra_headers={"x-stainless-retry-count": "42"})
 
         assert response.http_request.headers.get("x-stainless-retry-count") == "42"
 
@@ -1127,11 +1135,11 @@ class TestAsyncTractorbeam:
             FinalRequestOptions(
                 method="get",
                 url="/foo",
-                params={"foo": "baz", "query_param": "overriden"},
+                params={"foo": "baz", "query_param": "overridden"},
             )
         )
         url = httpx.URL(request.url)
-        assert dict(url.params) == {"foo": "baz", "query_param": "overriden"}
+        assert dict(url.params) == {"foo": "baz", "query_param": "overridden"}
 
     def test_request_extra_json(self) -> None:
         request = self.client._build_request(
@@ -1497,11 +1505,14 @@ class TestAsyncTractorbeam:
     @mock.patch("tractorbeam._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
     @pytest.mark.respx(base_url=base_url)
     async def test_retrying_timeout_errors_doesnt_leak(self, respx_mock: MockRouter) -> None:
-        respx_mock.get("/api-tokens/token_123").mock(side_effect=httpx.TimeoutException("Test timeout error"))
+        respx_mock.post("/graphs").mock(side_effect=httpx.TimeoutException("Test timeout error"))
 
         with pytest.raises(APITimeoutError):
-            await self.client.get(
-                "/api-tokens/token_123", cast_to=httpx.Response, options={"headers": {RAW_RESPONSE_HEADER: "stream"}}
+            await self.client.post(
+                "/graphs",
+                body=cast(object, dict(name="artificial-general-intelligence")),
+                cast_to=httpx.Response,
+                options={"headers": {RAW_RESPONSE_HEADER: "stream"}},
             )
 
         assert _get_open_connections(self.client) == 0
@@ -1509,11 +1520,14 @@ class TestAsyncTractorbeam:
     @mock.patch("tractorbeam._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
     @pytest.mark.respx(base_url=base_url)
     async def test_retrying_status_errors_doesnt_leak(self, respx_mock: MockRouter) -> None:
-        respx_mock.get("/api-tokens/token_123").mock(return_value=httpx.Response(500))
+        respx_mock.post("/graphs").mock(return_value=httpx.Response(500))
 
         with pytest.raises(APIStatusError):
-            await self.client.get(
-                "/api-tokens/token_123", cast_to=httpx.Response, options={"headers": {RAW_RESPONSE_HEADER: "stream"}}
+            await self.client.post(
+                "/graphs",
+                body=cast(object, dict(name="artificial-general-intelligence")),
+                cast_to=httpx.Response,
+                options={"headers": {RAW_RESPONSE_HEADER: "stream"}},
             )
 
         assert _get_open_connections(self.client) == 0
@@ -1543,9 +1557,9 @@ class TestAsyncTractorbeam:
                 return httpx.Response(500)
             return httpx.Response(200)
 
-        respx_mock.get("/api-tokens/token_123").mock(side_effect=retry_handler)
+        respx_mock.post("/graphs").mock(side_effect=retry_handler)
 
-        response = await client.api_tokens.with_raw_response.retrieve("id")
+        response = await client.graphs.with_raw_response.create(name="name")
 
         assert response.retries_taken == failures_before_success
         assert int(response.http_request.headers.get("x-stainless-retry-count")) == failures_before_success
@@ -1568,10 +1582,10 @@ class TestAsyncTractorbeam:
                 return httpx.Response(500)
             return httpx.Response(200)
 
-        respx_mock.get("/api-tokens/token_123").mock(side_effect=retry_handler)
+        respx_mock.post("/graphs").mock(side_effect=retry_handler)
 
-        response = await client.api_tokens.with_raw_response.retrieve(
-            "id", extra_headers={"x-stainless-retry-count": Omit()}
+        response = await client.graphs.with_raw_response.create(
+            name="name", extra_headers={"x-stainless-retry-count": Omit()}
         )
 
         assert len(response.http_request.headers.get_list("x-stainless-retry-count")) == 0
@@ -1594,10 +1608,10 @@ class TestAsyncTractorbeam:
                 return httpx.Response(500)
             return httpx.Response(200)
 
-        respx_mock.get("/api-tokens/token_123").mock(side_effect=retry_handler)
+        respx_mock.post("/graphs").mock(side_effect=retry_handler)
 
-        response = await client.api_tokens.with_raw_response.retrieve(
-            "id", extra_headers={"x-stainless-retry-count": "42"}
+        response = await client.graphs.with_raw_response.create(
+            name="name", extra_headers={"x-stainless-retry-count": "42"}
         )
 
         assert response.http_request.headers.get("x-stainless-retry-count") == "42"
