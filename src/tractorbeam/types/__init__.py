@@ -4,7 +4,6 @@ from __future__ import annotations
 
 from .graph import Graph as Graph
 from .document import Document as Document
-from .document_contents import DocumentContents as DocumentContents
 from .graph_create_params import GraphCreateParams as GraphCreateParams
 from .graph_list_response import GraphListResponse as GraphListResponse
 from .query_create_params import QueryCreateParams as QueryCreateParams

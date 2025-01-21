@@ -22,7 +22,6 @@ from .._response import (
 )
 from .._base_client import make_request_options
 from ..types.document import Document
-from ..types.document_contents import DocumentContents
 from ..types.document_list_response import DocumentListResponse
 
 __all__ = ["DocumentsResource", "AsyncDocumentsResource"]
@@ -162,9 +161,10 @@ class DocumentsResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
-    ) -> DocumentContents:
+    ) -> None:
         """
-        Get the binary contents of a document by its ID.
+        This endpoint returns a redirect to a signed URL to securely download the
+        document contents.
 
         Args:
           extra_headers: Send extra headers
@@ -177,12 +177,13 @@ class DocumentsResource(SyncAPIResource):
         """
         if not id:
             raise ValueError(f"Expected a non-empty value for `id` but received {id!r}")
+        extra_headers = {"Accept": "*/*", **(extra_headers or {})}
         return self._get(
             f"/documents/{id}/contents",
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=DocumentContents,
+            cast_to=NoneType,
         )
 
     def get(
@@ -397,9 +398,10 @@ class AsyncDocumentsResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
-    ) -> DocumentContents:
+    ) -> None:
         """
-        Get the binary contents of a document by its ID.
+        This endpoint returns a redirect to a signed URL to securely download the
+        document contents.
 
         Args:
           extra_headers: Send extra headers
@@ -412,12 +414,13 @@ class AsyncDocumentsResource(AsyncAPIResource):
         """
         if not id:
             raise ValueError(f"Expected a non-empty value for `id` but received {id!r}")
+        extra_headers = {"Accept": "*/*", **(extra_headers or {})}
         return await self._get(
             f"/documents/{id}/contents",
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=DocumentContents,
+            cast_to=NoneType,
         )
 
     async def get(
