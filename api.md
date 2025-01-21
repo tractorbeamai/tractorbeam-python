@@ -3,7 +3,7 @@
 Types:
 
 ```python
-from tractorbeam.types import Document, DocumentContents, DocumentListResponse
+from tractorbeam.types import Document, DocumentListResponse
 ```
 
 Methods:
@@ -11,7 +11,7 @@ Methods:
 - <code title="post /documents">client.documents.<a href="./src/tractorbeam/resources/documents.py">create</a>(\*\*<a href="src/tractorbeam/types/document_create_params.py">params</a>) -> <a href="./src/tractorbeam/types/document.py">Document</a></code>
 - <code title="get /documents">client.documents.<a href="./src/tractorbeam/resources/documents.py">list</a>() -> <a href="./src/tractorbeam/types/document_list_response.py">DocumentListResponse</a></code>
 - <code title="delete /documents/{id}">client.documents.<a href="./src/tractorbeam/resources/documents.py">delete</a>(id) -> None</code>
-- <code title="get /documents/{id}/contents">client.documents.<a href="./src/tractorbeam/resources/documents.py">contents</a>(id) -> <a href="./src/tractorbeam/types/document_contents.py">DocumentContents</a></code>
+- <code title="get /documents/{id}/contents">client.documents.<a href="./src/tractorbeam/resources/documents.py">contents</a>(id) -> None</code>
 - <code title="get /documents/{id}">client.documents.<a href="./src/tractorbeam/resources/documents.py">get</a>(id) -> <a href="./src/tractorbeam/types/document.py">Document</a></code>
 - <code title="get /documents/{id}/tuples">client.documents.<a href="./src/tractorbeam/resources/documents.py">tuples</a>(id, \*\*<a href="src/tractorbeam/types/document_tuples_params.py">params</a>) -> None</code>
 
