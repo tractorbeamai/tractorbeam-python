@@ -9,11 +9,7 @@ import pytest
 
 from tests.utils import assert_matches_type
 from tractorbeam import Tractorbeam, AsyncTractorbeam
-from tractorbeam.types import (
-    Document,
-    DocumentContents,
-    DocumentListResponse,
-)
+from tractorbeam.types import Document, DocumentListResponse
 
 base_url = os.environ.get("TEST_API_BASE_URL", "http://127.0.0.1:4010")
 
@@ -129,7 +125,7 @@ class TestDocuments:
         document = client.documents.contents(
             "id",
         )
-        assert_matches_type(DocumentContents, document, path=["response"])
+        assert document is None
 
     @parametrize
     def test_raw_response_contents(self, client: Tractorbeam) -> None:
@@ -140,7 +136,7 @@ class TestDocuments:
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         document = response.parse()
-        assert_matches_type(DocumentContents, document, path=["response"])
+        assert document is None
 
     @parametrize
     def test_streaming_response_contents(self, client: Tractorbeam) -> None:
@@ -151,7 +147,7 @@ class TestDocuments:
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             document = response.parse()
-            assert_matches_type(DocumentContents, document, path=["response"])
+            assert document is None
 
         assert cast(Any, response.is_closed) is True
 
@@ -358,7 +354,7 @@ class TestAsyncDocuments:
         document = await async_client.documents.contents(
             "id",
         )
-        assert_matches_type(DocumentContents, document, path=["response"])
+        assert document is None
 
     @parametrize
     async def test_raw_response_contents(self, async_client: AsyncTractorbeam) -> None:
@@ -369,7 +365,7 @@ class TestAsyncDocuments:
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         document = await response.parse()
-        assert_matches_type(DocumentContents, document, path=["response"])
+        assert document is None
 
     @parametrize
     async def test_streaming_response_contents(self, async_client: AsyncTractorbeam) -> None:
@@ -380,7 +376,7 @@ class TestAsyncDocuments:
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             document = await response.parse()
-            assert_matches_type(DocumentContents, document, path=["response"])
+            assert document is None
 
         assert cast(Any, response.is_closed) is True
 
