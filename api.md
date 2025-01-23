@@ -20,7 +20,12 @@ Methods:
 Types:
 
 ```python
-from tractorbeam.types import Graph, GraphListResponse, GraphAddTuplesResponse
+from tractorbeam.types import (
+    Graph,
+    GraphListResponse,
+    GraphAddTuplesResponse,
+    GraphGetTuplesResponse,
+)
 ```
 
 Methods:
@@ -30,6 +35,7 @@ Methods:
 - <code title="delete /graphs/{owner}/{name}">client.graphs.<a href="./src/tractorbeam/resources/graphs.py">delete</a>(name, \*, owner) -> None</code>
 - <code title="post /graphs/{owner}/{name}/tuples">client.graphs.<a href="./src/tractorbeam/resources/graphs.py">add_tuples</a>(name, \*, owner, \*\*<a href="src/tractorbeam/types/graph_add_tuples_params.py">params</a>) -> <a href="./src/tractorbeam/types/graph_add_tuples_response.py">GraphAddTuplesResponse</a></code>
 - <code title="get /graphs/{owner}/{name}">client.graphs.<a href="./src/tractorbeam/resources/graphs.py">get</a>(name, \*, owner) -> <a href="./src/tractorbeam/types/graph.py">Graph</a></code>
+- <code title="get /graphs/{owner}/{name}/tuples">client.graphs.<a href="./src/tractorbeam/resources/graphs.py">get_tuples</a>(name, \*, owner) -> <a href="./src/tractorbeam/types/graph_get_tuples_response.py">GraphGetTuplesResponse</a></code>
 
 # Health
 

@@ -16,3 +16,4 @@ from .document_list_response import DocumentListResponse as DocumentListResponse
 from .document_tuples_params import DocumentTuplesParams as DocumentTuplesParams
 from .graph_add_tuples_params import GraphAddTuplesParams as GraphAddTuplesParams
 from .graph_add_tuples_response import GraphAddTuplesResponse as GraphAddTuplesResponse
+from .graph_get_tuples_response import GraphGetTuplesResponse as GraphGetTuplesResponse
