@@ -132,9 +132,9 @@ class TestGraphs:
             owner="graph-owner",
             tuples=[
                 {
-                    "object": "Tractorbeam",
-                    "predicate": "works_at",
-                    "subject": "Wade",
+                    "object": "Company1",
+                    "predicate": "worksAt",
+                    "subject": "Person1",
                 }
             ],
         )
@@ -147,9 +147,9 @@ class TestGraphs:
             owner="graph-owner",
             tuples=[
                 {
-                    "object": "Tractorbeam",
-                    "predicate": "works_at",
-                    "subject": "Wade",
+                    "object": "Company1",
+                    "predicate": "worksAt",
+                    "subject": "Person1",
                 }
             ],
             embeddings=[[0]],
@@ -163,9 +163,9 @@ class TestGraphs:
             owner="graph-owner",
             tuples=[
                 {
-                    "object": "Tractorbeam",
-                    "predicate": "works_at",
-                    "subject": "Wade",
+                    "object": "Company1",
+                    "predicate": "worksAt",
+                    "subject": "Person1",
                 }
             ],
         )
@@ -182,9 +182,9 @@ class TestGraphs:
             owner="graph-owner",
             tuples=[
                 {
-                    "object": "Tractorbeam",
-                    "predicate": "works_at",
-                    "subject": "Wade",
+                    "object": "Company1",
+                    "predicate": "worksAt",
+                    "subject": "Person1",
                 }
             ],
         ) as response:
@@ -204,9 +204,9 @@ class TestGraphs:
                 owner="",
                 tuples=[
                     {
-                        "object": "Tractorbeam",
-                        "predicate": "works_at",
-                        "subject": "Wade",
+                        "object": "Company1",
+                        "predicate": "worksAt",
+                        "subject": "Person1",
                     }
                 ],
             )
@@ -217,9 +217,9 @@ class TestGraphs:
                 owner="graph-owner",
                 tuples=[
                     {
-                        "object": "Tractorbeam",
-                        "predicate": "works_at",
-                        "subject": "Wade",
+                        "object": "Company1",
+                        "predicate": "worksAt",
+                        "subject": "Person1",
                     }
                 ],
             )
@@ -387,9 +387,9 @@ class TestAsyncGraphs:
             owner="graph-owner",
             tuples=[
                 {
-                    "object": "Tractorbeam",
-                    "predicate": "works_at",
-                    "subject": "Wade",
+                    "object": "Company1",
+                    "predicate": "worksAt",
+                    "subject": "Person1",
                 }
             ],
         )
@@ -402,9 +402,9 @@ class TestAsyncGraphs:
             owner="graph-owner",
             tuples=[
                 {
-                    "object": "Tractorbeam",
-                    "predicate": "works_at",
-                    "subject": "Wade",
+                    "object": "Company1",
+                    "predicate": "worksAt",
+                    "subject": "Person1",
                 }
             ],
             embeddings=[[0]],
@@ -418,9 +418,9 @@ class TestAsyncGraphs:
             owner="graph-owner",
             tuples=[
                 {
-                    "object": "Tractorbeam",
-                    "predicate": "works_at",
-                    "subject": "Wade",
+                    "object": "Company1",
+                    "predicate": "worksAt",
+                    "subject": "Person1",
                 }
             ],
         )
@@ -437,9 +437,9 @@ class TestAsyncGraphs:
             owner="graph-owner",
             tuples=[
                 {
-                    "object": "Tractorbeam",
-                    "predicate": "works_at",
-                    "subject": "Wade",
+                    "object": "Company1",
+                    "predicate": "worksAt",
+                    "subject": "Person1",
                 }
             ],
         ) as response:
@@ -459,9 +459,9 @@ class TestAsyncGraphs:
                 owner="",
                 tuples=[
                     {
-                        "object": "Tractorbeam",
-                        "predicate": "works_at",
-                        "subject": "Wade",
+                        "object": "Company1",
+                        "predicate": "worksAt",
+                        "subject": "Person1",
                     }
                 ],
             )
@@ -472,9 +472,9 @@ class TestAsyncGraphs:
                 owner="graph-owner",
                 tuples=[
                     {
-                        "object": "Tractorbeam",
-                        "predicate": "works_at",
-                        "subject": "Wade",
+                        "object": "Company1",
+                        "predicate": "worksAt",
+                        "subject": "Person1",
                     }
                 ],
             )
