@@ -13,6 +13,7 @@ from tractorbeam.types import (
     Graph,
     GraphListResponse,
     GraphAddTuplesResponse,
+    GraphGetTuplesResponse,
 )
 
 base_url = os.environ.get("TEST_API_BASE_URL", "http://127.0.0.1:4010")
@@ -272,6 +273,54 @@ class TestGraphs:
                 owner="org_2nlswGH0pZ1V1OlHYAUwQG6TVBx",
             )
 
+    @parametrize
+    def test_method_get_tuples(self, client: Tractorbeam) -> None:
+        graph = client.graphs.get_tuples(
+            name="name",
+            owner="owner",
+        )
+        assert_matches_type(GraphGetTuplesResponse, graph, path=["response"])
+
+    @parametrize
+    def test_raw_response_get_tuples(self, client: Tractorbeam) -> None:
+        response = client.graphs.with_raw_response.get_tuples(
+            name="name",
+            owner="owner",
+        )
+
+        assert response.is_closed is True
+        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+        graph = response.parse()
+        assert_matches_type(GraphGetTuplesResponse, graph, path=["response"])
+
+    @parametrize
+    def test_streaming_response_get_tuples(self, client: Tractorbeam) -> None:
+        with client.graphs.with_streaming_response.get_tuples(
+            name="name",
+            owner="owner",
+        ) as response:
+            assert not response.is_closed
+            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+
+            graph = response.parse()
+            assert_matches_type(GraphGetTuplesResponse, graph, path=["response"])
+
+        assert cast(Any, response.is_closed) is True
+
+    @parametrize
+    def test_path_params_get_tuples(self, client: Tractorbeam) -> None:
+        with pytest.raises(ValueError, match=r"Expected a non-empty value for `owner` but received ''"):
+            client.graphs.with_raw_response.get_tuples(
+                name="name",
+                owner="",
+            )
+
+        with pytest.raises(ValueError, match=r"Expected a non-empty value for `name` but received ''"):
+            client.graphs.with_raw_response.get_tuples(
+                name="",
+                owner="owner",
+            )
+
 
 class TestAsyncGraphs:
     parametrize = pytest.mark.parametrize("async_client", [False, True], indirect=True, ids=["loose", "strict"])
@@ -525,4 +574,52 @@ class TestAsyncGraphs:
             await async_client.graphs.with_raw_response.get(
                 name="",
                 owner="org_2nlswGH0pZ1V1OlHYAUwQG6TVBx",
+            )
+
+    @parametrize
+    async def test_method_get_tuples(self, async_client: AsyncTractorbeam) -> None:
+        graph = await async_client.graphs.get_tuples(
+            name="name",
+            owner="owner",
+        )
+        assert_matches_type(GraphGetTuplesResponse, graph, path=["response"])
+
+    @parametrize
+    async def test_raw_response_get_tuples(self, async_client: AsyncTractorbeam) -> None:
+        response = await async_client.graphs.with_raw_response.get_tuples(
+            name="name",
+            owner="owner",
+        )
+
+        assert response.is_closed is True
+        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+        graph = await response.parse()
+        assert_matches_type(GraphGetTuplesResponse, graph, path=["response"])
+
+    @parametrize
+    async def test_streaming_response_get_tuples(self, async_client: AsyncTractorbeam) -> None:
+        async with async_client.graphs.with_streaming_response.get_tuples(
+            name="name",
+            owner="owner",
+        ) as response:
+            assert not response.is_closed
+            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+
+            graph = await response.parse()
+            assert_matches_type(GraphGetTuplesResponse, graph, path=["response"])
+
+        assert cast(Any, response.is_closed) is True
+
+    @parametrize
+    async def test_path_params_get_tuples(self, async_client: AsyncTractorbeam) -> None:
+        with pytest.raises(ValueError, match=r"Expected a non-empty value for `owner` but received ''"):
+            await async_client.graphs.with_raw_response.get_tuples(
+                name="name",
+                owner="",
+            )
+
+        with pytest.raises(ValueError, match=r"Expected a non-empty value for `name` but received ''"):
+            await async_client.graphs.with_raw_response.get_tuples(
+                name="",
+                owner="owner",
             )
