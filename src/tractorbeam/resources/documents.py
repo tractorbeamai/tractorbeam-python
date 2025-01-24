@@ -224,6 +224,8 @@ class DocumentsResource(SyncAPIResource):
         id: str,
         *,
         stream: bool | NotGiven = NOT_GIVEN,
+        target_graph_name: Optional[str] | NotGiven = NOT_GIVEN,
+        target_graph_owner: Optional[str] | NotGiven = NOT_GIVEN,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -237,8 +239,15 @@ class DocumentsResource(SyncAPIResource):
         will be a stream of tuples as JSON server-sent events. This endpoint requires
         calling our external inference service, and will have significant latency.
 
+        If target_graph_owner and target_graph_name are provided as query parameters,
+        the tuples will also be inserted into the specified graph.
+
         Args:
           stream: Whether to stream the tuples back as a stream of JSON server-sent events
+
+          target_graph_name: The name of the target graph to add tuples to
+
+          target_graph_owner: The owner of the target graph to add tuples to
 
           extra_headers: Send extra headers
 
@@ -258,7 +267,14 @@ class DocumentsResource(SyncAPIResource):
                 extra_query=extra_query,
                 extra_body=extra_body,
                 timeout=timeout,
-                query=maybe_transform({"stream": stream}, document_tuples_params.DocumentTuplesParams),
+                query=maybe_transform(
+                    {
+                        "stream": stream,
+                        "target_graph_name": target_graph_name,
+                        "target_graph_owner": target_graph_owner,
+                    },
+                    document_tuples_params.DocumentTuplesParams,
+                ),
             ),
             cast_to=NoneType,
         )
@@ -461,6 +477,8 @@ class AsyncDocumentsResource(AsyncAPIResource):
         id: str,
         *,
         stream: bool | NotGiven = NOT_GIVEN,
+        target_graph_name: Optional[str] | NotGiven = NOT_GIVEN,
+        target_graph_owner: Optional[str] | NotGiven = NOT_GIVEN,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -474,8 +492,15 @@ class AsyncDocumentsResource(AsyncAPIResource):
         will be a stream of tuples as JSON server-sent events. This endpoint requires
         calling our external inference service, and will have significant latency.
 
+        If target_graph_owner and target_graph_name are provided as query parameters,
+        the tuples will also be inserted into the specified graph.
+
         Args:
           stream: Whether to stream the tuples back as a stream of JSON server-sent events
+
+          target_graph_name: The name of the target graph to add tuples to
+
+          target_graph_owner: The owner of the target graph to add tuples to
 
           extra_headers: Send extra headers
 
@@ -495,7 +520,14 @@ class AsyncDocumentsResource(AsyncAPIResource):
                 extra_query=extra_query,
                 extra_body=extra_body,
                 timeout=timeout,
-                query=await async_maybe_transform({"stream": stream}, document_tuples_params.DocumentTuplesParams),
+                query=await async_maybe_transform(
+                    {
+                        "stream": stream,
+                        "target_graph_name": target_graph_name,
+                        "target_graph_owner": target_graph_owner,
+                    },
+                    document_tuples_params.DocumentTuplesParams,
+                ),
             ),
             cast_to=NoneType,
         )
