@@ -208,6 +208,8 @@ class TestDocuments:
         document = client.documents.tuples(
             id="doc_2yYISEvrO9LrLAOJjnw27",
             stream=True,
+            target_graph_name="target_graph_name",
+            target_graph_owner="target_graph_owner",
         )
         assert document is None
 
@@ -437,6 +439,8 @@ class TestAsyncDocuments:
         document = await async_client.documents.tuples(
             id="doc_2yYISEvrO9LrLAOJjnw27",
             stream=True,
+            target_graph_name="target_graph_name",
+            target_graph_owner="target_graph_owner",
         )
         assert document is None
 
