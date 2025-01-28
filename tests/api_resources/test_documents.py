@@ -120,6 +120,7 @@ class TestDocuments:
                 "",
             )
 
+    @pytest.mark.skip(reason="Prism doesn't properly handle redirects")
     @parametrize
     def test_method_contents(self, client: Tractorbeam) -> None:
         document = client.documents.contents(
@@ -127,6 +128,7 @@ class TestDocuments:
         )
         assert document is None
 
+    @pytest.mark.skip(reason="Prism doesn't properly handle redirects")
     @parametrize
     def test_raw_response_contents(self, client: Tractorbeam) -> None:
         response = client.documents.with_raw_response.contents(
@@ -138,6 +140,7 @@ class TestDocuments:
         document = response.parse()
         assert document is None
 
+    @pytest.mark.skip(reason="Prism doesn't properly handle redirects")
     @parametrize
     def test_streaming_response_contents(self, client: Tractorbeam) -> None:
         with client.documents.with_streaming_response.contents(
@@ -151,6 +154,7 @@ class TestDocuments:
 
         assert cast(Any, response.is_closed) is True
 
+    @pytest.mark.skip(reason="Prism doesn't properly handle redirects")
     @parametrize
     def test_path_params_contents(self, client: Tractorbeam) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `id` but received ''"):
@@ -351,6 +355,7 @@ class TestAsyncDocuments:
                 "",
             )
 
+    @pytest.mark.skip(reason="Prism doesn't properly handle redirects")
     @parametrize
     async def test_method_contents(self, async_client: AsyncTractorbeam) -> None:
         document = await async_client.documents.contents(
@@ -358,6 +363,7 @@ class TestAsyncDocuments:
         )
         assert document is None
 
+    @pytest.mark.skip(reason="Prism doesn't properly handle redirects")
     @parametrize
     async def test_raw_response_contents(self, async_client: AsyncTractorbeam) -> None:
         response = await async_client.documents.with_raw_response.contents(
@@ -369,6 +375,7 @@ class TestAsyncDocuments:
         document = await response.parse()
         assert document is None
 
+    @pytest.mark.skip(reason="Prism doesn't properly handle redirects")
     @parametrize
     async def test_streaming_response_contents(self, async_client: AsyncTractorbeam) -> None:
         async with async_client.documents.with_streaming_response.contents(
@@ -382,6 +389,7 @@ class TestAsyncDocuments:
 
         assert cast(Any, response.is_closed) is True
 
+    @pytest.mark.skip(reason="Prism doesn't properly handle redirects")
     @parametrize
     async def test_path_params_contents(self, async_client: AsyncTractorbeam) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `id` but received ''"):
