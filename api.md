@@ -48,16 +48,3 @@ from tractorbeam.types import HealthCheckResponse
 Methods:
 
 - <code title="get /health">client.health.<a href="./src/tractorbeam/resources/health.py">check</a>() -> <a href="./src/tractorbeam/types/health_check_response.py">HealthCheckResponse</a></code>
-
-# Queries
-
-Types:
-
-```python
-from tractorbeam.types import QueryCreateResponse, QueryDecodeResponse
-```
-
-Methods:
-
-- <code title="post /query">client.queries.<a href="./src/tractorbeam/resources/queries.py">create</a>(\*\*<a href="src/tractorbeam/types/query_create_params.py">params</a>) -> <a href="./src/tractorbeam/types/query_create_response.py">QueryCreateResponse</a></code>
-- <code title="post /queries/decode">client.queries.<a href="./src/tractorbeam/resources/queries.py">decode</a>(\*\*<a href="src/tractorbeam/types/query_decode_params.py">params</a>) -> <a href="./src/tractorbeam/types/query_decode_response.py">QueryDecodeResponse</a></code>
