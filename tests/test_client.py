@@ -23,6 +23,7 @@ from pydantic import ValidationError
 
 from tractorbeam import Tractorbeam, AsyncTractorbeam, APIResponseValidationError
 from tractorbeam._types import Omit
+from tractorbeam._utils import maybe_transform
 from tractorbeam._models import BaseModel, FinalRequestOptions
 from tractorbeam._constants import RAW_RESPONSE_HEADER
 from tractorbeam._exceptions import APIStatusError, APITimeoutError, TractorbeamError, APIResponseValidationError
@@ -32,6 +33,7 @@ from tractorbeam._base_client import (
     BaseClient,
     make_request_options,
 )
+from tractorbeam.types.graph_create_params import GraphCreateParams
 
 from .utils import update_env
 
@@ -730,7 +732,7 @@ class TestTractorbeam:
         with pytest.raises(APITimeoutError):
             self.client.post(
                 "/graphs",
-                body=cast(object, dict(name="artificial-general-intelligence")),
+                body=cast(object, maybe_transform(dict(name="artificial-general-intelligence"), GraphCreateParams)),
                 cast_to=httpx.Response,
                 options={"headers": {RAW_RESPONSE_HEADER: "stream"}},
             )
@@ -745,7 +747,7 @@ class TestTractorbeam:
         with pytest.raises(APIStatusError):
             self.client.post(
                 "/graphs",
-                body=cast(object, dict(name="artificial-general-intelligence")),
+                body=cast(object, maybe_transform(dict(name="artificial-general-intelligence"), GraphCreateParams)),
                 cast_to=httpx.Response,
                 options={"headers": {RAW_RESPONSE_HEADER: "stream"}},
             )
@@ -1511,7 +1513,7 @@ class TestAsyncTractorbeam:
         with pytest.raises(APITimeoutError):
             await self.client.post(
                 "/graphs",
-                body=cast(object, dict(name="artificial-general-intelligence")),
+                body=cast(object, maybe_transform(dict(name="artificial-general-intelligence"), GraphCreateParams)),
                 cast_to=httpx.Response,
                 options={"headers": {RAW_RESPONSE_HEADER: "stream"}},
             )
@@ -1526,7 +1528,7 @@ class TestAsyncTractorbeam:
         with pytest.raises(APIStatusError):
             await self.client.post(
                 "/graphs",
-                body=cast(object, dict(name="artificial-general-intelligence")),
+                body=cast(object, maybe_transform(dict(name="artificial-general-intelligence"), GraphCreateParams)),
                 cast_to=httpx.Response,
                 options={"headers": {RAW_RESPONSE_HEADER: "stream"}},
             )
