@@ -1,5 +1,46 @@
 # Changelog
 
+## 1.2.0 (2025-02-22)
+
+Full Changelog: [v1.1.0...v1.2.0](https://github.com/tractorbeamai/tractorbeam-python/compare/v1.1.0...v1.2.0)
+
+### Features
+
+* **api:** manual updates ([#25](https://github.com/tractorbeamai/tractorbeam-python/issues/25)) ([5637866](https://github.com/tractorbeamai/tractorbeam-python/commit/5637866da12da8ad8d9bab4c08380ed15caf74d6))
+* **client:** allow passing `NotGiven` for body ([#37](https://github.com/tractorbeamai/tractorbeam-python/issues/37)) ([ac8167e](https://github.com/tractorbeamai/tractorbeam-python/commit/ac8167e7e0700d0a16eb27df2eb7324037b3355e))
+* **client:** send `X-Stainless-Read-Timeout` header ([#32](https://github.com/tractorbeamai/tractorbeam-python/issues/32)) ([d0dbd36](https://github.com/tractorbeamai/tractorbeam-python/commit/d0dbd36754e78210a503e5ee70ab7b0796378e81))
+* update stainless-augmented openapi spec ([#22](https://github.com/tractorbeamai/tractorbeam-python/issues/22)) ([2132c19](https://github.com/tractorbeamai/tractorbeam-python/commit/2132c190d3ffa1a62788de142d2667875b2c7898))
+* update stainless-augmented openapi spec ([#24](https://github.com/tractorbeamai/tractorbeam-python/issues/24)) ([a5fe650](https://github.com/tractorbeamai/tractorbeam-python/commit/a5fe65029573ce4f329e654961b5f3c2495e57e3))
+* update stainless-augmented openapi spec ([#27](https://github.com/tractorbeamai/tractorbeam-python/issues/27)) ([75fb286](https://github.com/tractorbeamai/tractorbeam-python/commit/75fb286f23ee35446622a5957cbf81891feed77b))
+* update stainless-augmented openapi spec ([#29](https://github.com/tractorbeamai/tractorbeam-python/issues/29)) ([fa869af](https://github.com/tractorbeamai/tractorbeam-python/commit/fa869afc6c4649753ffbf29f8c504fc0e8582dff))
+
+
+### Bug Fixes
+
+* asyncify on non-asyncio runtimes ([#36](https://github.com/tractorbeamai/tractorbeam-python/issues/36)) ([d5f0375](https://github.com/tractorbeamai/tractorbeam-python/commit/d5f03750c4c8bff37fe727e3cebc176d12206aa8))
+* **client:** mark some request bodies as optional ([ac8167e](https://github.com/tractorbeamai/tractorbeam-python/commit/ac8167e7e0700d0a16eb27df2eb7324037b3355e))
+* **tests:** make test_get_platform less flaky ([#20](https://github.com/tractorbeamai/tractorbeam-python/issues/20)) ([74c7f08](https://github.com/tractorbeamai/tractorbeam-python/commit/74c7f081fd8ff54218dfb0049d2e64919ea35b7c))
+
+
+### Chores
+
+* **internal:** avoid pytest-asyncio deprecation warning ([#21](https://github.com/tractorbeamai/tractorbeam-python/issues/21)) ([5bf4bea](https://github.com/tractorbeamai/tractorbeam-python/commit/5bf4bea8ea479e5af585ed5b65d55ce64ff91682))
+* **internal:** bummp ruff dependency ([#31](https://github.com/tractorbeamai/tractorbeam-python/issues/31)) ([de0699f](https://github.com/tractorbeamai/tractorbeam-python/commit/de0699f847c9d95ac9ce25fb975dc66ab93f26db))
+* **internal:** change default timeout to an int ([#30](https://github.com/tractorbeamai/tractorbeam-python/issues/30)) ([946db5d](https://github.com/tractorbeamai/tractorbeam-python/commit/946db5de52d71654a398d83836ceae275d1592a3))
+* **internal:** codegen related update ([#17](https://github.com/tractorbeamai/tractorbeam-python/issues/17)) ([7b4ec18](https://github.com/tractorbeamai/tractorbeam-python/commit/7b4ec187937f8285e73c42effb3e4705f4fb7ce0))
+* **internal:** codegen related update ([#28](https://github.com/tractorbeamai/tractorbeam-python/issues/28)) ([893b133](https://github.com/tractorbeamai/tractorbeam-python/commit/893b1335260f96210e4e6955e058f4ca23c08bf6))
+* **internal:** fix devcontainers setup ([#38](https://github.com/tractorbeamai/tractorbeam-python/issues/38)) ([c92101b](https://github.com/tractorbeamai/tractorbeam-python/commit/c92101bbd909e320744beb9e044dcd3820fb83c2))
+* **internal:** fix type traversing dictionary params ([#33](https://github.com/tractorbeamai/tractorbeam-python/issues/33)) ([92f273b](https://github.com/tractorbeamai/tractorbeam-python/commit/92f273bec10e0bd595f91368f08d64400c94ef46))
+* **internal:** minor formatting changes ([#26](https://github.com/tractorbeamai/tractorbeam-python/issues/26)) ([cc16de2](https://github.com/tractorbeamai/tractorbeam-python/commit/cc16de2b968155e41a1d42d51b8f2c40901104f0))
+* **internal:** minor style changes ([#23](https://github.com/tractorbeamai/tractorbeam-python/issues/23)) ([5a5e027](https://github.com/tractorbeamai/tractorbeam-python/commit/5a5e0277c6a3b0b16664541e62e95d3ecbfd01ab))
+* **internal:** minor type handling changes ([#34](https://github.com/tractorbeamai/tractorbeam-python/issues/34)) ([6178342](https://github.com/tractorbeamai/tractorbeam-python/commit/6178342fc9cfe4e6b4f8b3d559f9d4070105d3a5))
+* **internal:** update client tests ([#35](https://github.com/tractorbeamai/tractorbeam-python/issues/35)) ([4cf5abe](https://github.com/tractorbeamai/tractorbeam-python/commit/4cf5abed4100cbf108c8c4b7c6d181a1b95152e7))
+
+
+### Documentation
+
+* **raw responses:** fix duplicate `the` ([#19](https://github.com/tractorbeamai/tractorbeam-python/issues/19)) ([0b49f3d](https://github.com/tractorbeamai/tractorbeam-python/commit/0b49f3dcaafc5a6b6a5ce2267c28e99275844fc8))
+
 ## 1.1.0 (2025-01-15)
 
 Full Changelog: [v1.0.0...v1.1.0](https://github.com/tractorbeamai/tractorbeam-python/compare/v1.0.0...v1.1.0)
