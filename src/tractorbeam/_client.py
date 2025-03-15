@@ -24,7 +24,7 @@ from ._utils import (
     get_async_library,
 )
 from ._version import __version__
-from .resources import graphs, health, queries, documents
+from .resources import graphs, health, documents
 from ._streaming import Stream as Stream, AsyncStream as AsyncStream
 from ._exceptions import APIStatusError, TractorbeamError
 from ._base_client import (
@@ -49,7 +49,6 @@ class Tractorbeam(SyncAPIClient):
     documents: documents.DocumentsResource
     graphs: graphs.GraphsResource
     health: health.HealthResource
-    queries: queries.QueriesResource
     with_raw_response: TractorbeamWithRawResponse
     with_streaming_response: TractorbeamWithStreamedResponse
 
@@ -79,7 +78,7 @@ class Tractorbeam(SyncAPIClient):
         # part of our public interface in the future.
         _strict_response_validation: bool = False,
     ) -> None:
-        """Construct a new synchronous tractorbeam client instance.
+        """Construct a new synchronous Tractorbeam client instance.
 
         This automatically infers the `api_token` argument from the `TRACTORBEAM_API_TOKEN` environment variable if it is not provided.
         """
@@ -110,7 +109,6 @@ class Tractorbeam(SyncAPIClient):
         self.documents = documents.DocumentsResource(self)
         self.graphs = graphs.GraphsResource(self)
         self.health = health.HealthResource(self)
-        self.queries = queries.QueriesResource(self)
         self.with_raw_response = TractorbeamWithRawResponse(self)
         self.with_streaming_response = TractorbeamWithStreamedResponse(self)
 
@@ -223,7 +221,6 @@ class AsyncTractorbeam(AsyncAPIClient):
     documents: documents.AsyncDocumentsResource
     graphs: graphs.AsyncGraphsResource
     health: health.AsyncHealthResource
-    queries: queries.AsyncQueriesResource
     with_raw_response: AsyncTractorbeamWithRawResponse
     with_streaming_response: AsyncTractorbeamWithStreamedResponse
 
@@ -253,7 +250,7 @@ class AsyncTractorbeam(AsyncAPIClient):
         # part of our public interface in the future.
         _strict_response_validation: bool = False,
     ) -> None:
-        """Construct a new async tractorbeam client instance.
+        """Construct a new async AsyncTractorbeam client instance.
 
         This automatically infers the `api_token` argument from the `TRACTORBEAM_API_TOKEN` environment variable if it is not provided.
         """
@@ -284,7 +281,6 @@ class AsyncTractorbeam(AsyncAPIClient):
         self.documents = documents.AsyncDocumentsResource(self)
         self.graphs = graphs.AsyncGraphsResource(self)
         self.health = health.AsyncHealthResource(self)
-        self.queries = queries.AsyncQueriesResource(self)
         self.with_raw_response = AsyncTractorbeamWithRawResponse(self)
         self.with_streaming_response = AsyncTractorbeamWithStreamedResponse(self)
 
@@ -398,7 +394,6 @@ class TractorbeamWithRawResponse:
         self.documents = documents.DocumentsResourceWithRawResponse(client.documents)
         self.graphs = graphs.GraphsResourceWithRawResponse(client.graphs)
         self.health = health.HealthResourceWithRawResponse(client.health)
-        self.queries = queries.QueriesResourceWithRawResponse(client.queries)
 
 
 class AsyncTractorbeamWithRawResponse:
@@ -406,7 +401,6 @@ class AsyncTractorbeamWithRawResponse:
         self.documents = documents.AsyncDocumentsResourceWithRawResponse(client.documents)
         self.graphs = graphs.AsyncGraphsResourceWithRawResponse(client.graphs)
         self.health = health.AsyncHealthResourceWithRawResponse(client.health)
-        self.queries = queries.AsyncQueriesResourceWithRawResponse(client.queries)
 
 
 class TractorbeamWithStreamedResponse:
@@ -414,7 +408,6 @@ class TractorbeamWithStreamedResponse:
         self.documents = documents.DocumentsResourceWithStreamingResponse(client.documents)
         self.graphs = graphs.GraphsResourceWithStreamingResponse(client.graphs)
         self.health = health.HealthResourceWithStreamingResponse(client.health)
-        self.queries = queries.QueriesResourceWithStreamingResponse(client.queries)
 
 
 class AsyncTractorbeamWithStreamedResponse:
@@ -422,7 +415,6 @@ class AsyncTractorbeamWithStreamedResponse:
         self.documents = documents.AsyncDocumentsResourceWithStreamingResponse(client.documents)
         self.graphs = graphs.AsyncGraphsResourceWithStreamingResponse(client.graphs)
         self.health = health.AsyncHealthResourceWithStreamingResponse(client.health)
-        self.queries = queries.AsyncQueriesResourceWithStreamingResponse(client.queries)
 
 
 Client = Tractorbeam

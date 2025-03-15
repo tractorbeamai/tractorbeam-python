@@ -22,7 +22,6 @@ from .._response import (
 )
 from .._base_client import make_request_options
 from ..types.document import Document
-from ..types.document_contents import DocumentContents
 from ..types.document_list_response import DocumentListResponse
 
 __all__ = ["DocumentsResource", "AsyncDocumentsResource"]
@@ -32,7 +31,7 @@ class DocumentsResource(SyncAPIResource):
     @cached_property
     def with_raw_response(self) -> DocumentsResourceWithRawResponse:
         """
-        This property can be used as a prefix for any HTTP method call to return the
+        This property can be used as a prefix for any HTTP method call to return
         the raw response object instead of the parsed content.
 
         For more information, see https://www.github.com/tractorbeamai/tractorbeam-python#accessing-raw-response-data-eg-headers
@@ -162,9 +161,10 @@ class DocumentsResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
-    ) -> DocumentContents:
+    ) -> None:
         """
-        Get the binary contents of a document by its ID.
+        This endpoint returns a redirect to a signed URL to securely download the
+        document contents.
 
         Args:
           extra_headers: Send extra headers
@@ -177,12 +177,13 @@ class DocumentsResource(SyncAPIResource):
         """
         if not id:
             raise ValueError(f"Expected a non-empty value for `id` but received {id!r}")
+        extra_headers = {"Accept": "*/*", **(extra_headers or {})}
         return self._get(
             f"/documents/{id}/contents",
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=DocumentContents,
+            cast_to=NoneType,
         )
 
     def get(
@@ -223,6 +224,8 @@ class DocumentsResource(SyncAPIResource):
         id: str,
         *,
         stream: bool | NotGiven = NOT_GIVEN,
+        target_graph_name: Optional[str] | NotGiven = NOT_GIVEN,
+        target_graph_owner: Optional[str] | NotGiven = NOT_GIVEN,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -236,8 +239,15 @@ class DocumentsResource(SyncAPIResource):
         will be a stream of tuples as JSON server-sent events. This endpoint requires
         calling our external inference service, and will have significant latency.
 
+        If target_graph_owner and target_graph_name are provided as query parameters,
+        the tuples will also be inserted into the specified graph.
+
         Args:
           stream: Whether to stream the tuples back as a stream of JSON server-sent events
+
+          target_graph_name: The name of the target graph to add tuples to
+
+          target_graph_owner: The owner of the target graph to add tuples to
 
           extra_headers: Send extra headers
 
@@ -257,7 +267,14 @@ class DocumentsResource(SyncAPIResource):
                 extra_query=extra_query,
                 extra_body=extra_body,
                 timeout=timeout,
-                query=maybe_transform({"stream": stream}, document_tuples_params.DocumentTuplesParams),
+                query=maybe_transform(
+                    {
+                        "stream": stream,
+                        "target_graph_name": target_graph_name,
+                        "target_graph_owner": target_graph_owner,
+                    },
+                    document_tuples_params.DocumentTuplesParams,
+                ),
             ),
             cast_to=NoneType,
         )
@@ -267,7 +284,7 @@ class AsyncDocumentsResource(AsyncAPIResource):
     @cached_property
     def with_raw_response(self) -> AsyncDocumentsResourceWithRawResponse:
         """
-        This property can be used as a prefix for any HTTP method call to return the
+        This property can be used as a prefix for any HTTP method call to return
         the raw response object instead of the parsed content.
 
         For more information, see https://www.github.com/tractorbeamai/tractorbeam-python#accessing-raw-response-data-eg-headers
@@ -397,9 +414,10 @@ class AsyncDocumentsResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
-    ) -> DocumentContents:
+    ) -> None:
         """
-        Get the binary contents of a document by its ID.
+        This endpoint returns a redirect to a signed URL to securely download the
+        document contents.
 
         Args:
           extra_headers: Send extra headers
@@ -412,12 +430,13 @@ class AsyncDocumentsResource(AsyncAPIResource):
         """
         if not id:
             raise ValueError(f"Expected a non-empty value for `id` but received {id!r}")
+        extra_headers = {"Accept": "*/*", **(extra_headers or {})}
         return await self._get(
             f"/documents/{id}/contents",
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=DocumentContents,
+            cast_to=NoneType,
         )
 
     async def get(
@@ -458,6 +477,8 @@ class AsyncDocumentsResource(AsyncAPIResource):
         id: str,
         *,
         stream: bool | NotGiven = NOT_GIVEN,
+        target_graph_name: Optional[str] | NotGiven = NOT_GIVEN,
+        target_graph_owner: Optional[str] | NotGiven = NOT_GIVEN,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -471,8 +492,15 @@ class AsyncDocumentsResource(AsyncAPIResource):
         will be a stream of tuples as JSON server-sent events. This endpoint requires
         calling our external inference service, and will have significant latency.
 
+        If target_graph_owner and target_graph_name are provided as query parameters,
+        the tuples will also be inserted into the specified graph.
+
         Args:
           stream: Whether to stream the tuples back as a stream of JSON server-sent events
+
+          target_graph_name: The name of the target graph to add tuples to
+
+          target_graph_owner: The owner of the target graph to add tuples to
 
           extra_headers: Send extra headers
 
@@ -492,7 +520,14 @@ class AsyncDocumentsResource(AsyncAPIResource):
                 extra_query=extra_query,
                 extra_body=extra_body,
                 timeout=timeout,
-                query=await async_maybe_transform({"stream": stream}, document_tuples_params.DocumentTuplesParams),
+                query=await async_maybe_transform(
+                    {
+                        "stream": stream,
+                        "target_graph_name": target_graph_name,
+                        "target_graph_owner": target_graph_owner,
+                    },
+                    document_tuples_params.DocumentTuplesParams,
+                ),
             ),
             cast_to=NoneType,
         )

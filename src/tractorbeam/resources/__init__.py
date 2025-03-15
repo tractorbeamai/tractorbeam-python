@@ -16,14 +16,6 @@ from .health import (
     HealthResourceWithStreamingResponse,
     AsyncHealthResourceWithStreamingResponse,
 )
-from .queries import (
-    QueriesResource,
-    AsyncQueriesResource,
-    QueriesResourceWithRawResponse,
-    AsyncQueriesResourceWithRawResponse,
-    QueriesResourceWithStreamingResponse,
-    AsyncQueriesResourceWithStreamingResponse,
-)
 from .documents import (
     DocumentsResource,
     AsyncDocumentsResource,
@@ -52,10 +44,4 @@ __all__ = [
     "AsyncHealthResourceWithRawResponse",
     "HealthResourceWithStreamingResponse",
     "AsyncHealthResourceWithStreamingResponse",
-    "QueriesResource",
-    "AsyncQueriesResource",
-    "QueriesResourceWithRawResponse",
-    "AsyncQueriesResourceWithRawResponse",
-    "QueriesResourceWithStreamingResponse",
-    "AsyncQueriesResourceWithStreamingResponse",
 ]

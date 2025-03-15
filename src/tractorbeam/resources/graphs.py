@@ -24,6 +24,7 @@ from ..types.graph import Graph
 from .._base_client import make_request_options
 from ..types.graph_list_response import GraphListResponse
 from ..types.graph_add_tuples_response import GraphAddTuplesResponse
+from ..types.graph_get_tuples_response import GraphGetTuplesResponse
 
 __all__ = ["GraphsResource", "AsyncGraphsResource"]
 
@@ -32,7 +33,7 @@ class GraphsResource(SyncAPIResource):
     @cached_property
     def with_raw_response(self) -> GraphsResourceWithRawResponse:
         """
-        This property can be used as a prefix for any HTTP method call to return the
+        This property can be used as a prefix for any HTTP method call to return
         the raw response object instead of the parsed content.
 
         For more information, see https://www.github.com/tractorbeamai/tractorbeam-python#accessing-raw-response-data-eg-headers
@@ -217,12 +218,49 @@ class GraphsResource(SyncAPIResource):
             cast_to=Graph,
         )
 
+    def get_tuples(
+        self,
+        name: str,
+        *,
+        owner: str,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+    ) -> GraphGetTuplesResponse:
+        """
+        Get all tuples in a graph using an identity query (SELECT ?s ?p ?o WHERE { ?s ?p
+        ?o . }).
+
+        Args:
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if not owner:
+            raise ValueError(f"Expected a non-empty value for `owner` but received {owner!r}")
+        if not name:
+            raise ValueError(f"Expected a non-empty value for `name` but received {name!r}")
+        return self._get(
+            f"/graphs/{owner}/{name}/tuples",
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
+            cast_to=GraphGetTuplesResponse,
+        )
+
 
 class AsyncGraphsResource(AsyncAPIResource):
     @cached_property
     def with_raw_response(self) -> AsyncGraphsResourceWithRawResponse:
         """
-        This property can be used as a prefix for any HTTP method call to return the
+        This property can be used as a prefix for any HTTP method call to return
         the raw response object instead of the parsed content.
 
         For more information, see https://www.github.com/tractorbeamai/tractorbeam-python#accessing-raw-response-data-eg-headers
@@ -407,6 +445,43 @@ class AsyncGraphsResource(AsyncAPIResource):
             cast_to=Graph,
         )
 
+    async def get_tuples(
+        self,
+        name: str,
+        *,
+        owner: str,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+    ) -> GraphGetTuplesResponse:
+        """
+        Get all tuples in a graph using an identity query (SELECT ?s ?p ?o WHERE { ?s ?p
+        ?o . }).
+
+        Args:
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if not owner:
+            raise ValueError(f"Expected a non-empty value for `owner` but received {owner!r}")
+        if not name:
+            raise ValueError(f"Expected a non-empty value for `name` but received {name!r}")
+        return await self._get(
+            f"/graphs/{owner}/{name}/tuples",
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
+            cast_to=GraphGetTuplesResponse,
+        )
+
 
 class GraphsResourceWithRawResponse:
     def __init__(self, graphs: GraphsResource) -> None:
@@ -426,6 +501,9 @@ class GraphsResourceWithRawResponse:
         )
         self.get = to_raw_response_wrapper(
             graphs.get,
+        )
+        self.get_tuples = to_raw_response_wrapper(
+            graphs.get_tuples,
         )
 
 
@@ -448,6 +526,9 @@ class AsyncGraphsResourceWithRawResponse:
         self.get = async_to_raw_response_wrapper(
             graphs.get,
         )
+        self.get_tuples = async_to_raw_response_wrapper(
+            graphs.get_tuples,
+        )
 
 
 class GraphsResourceWithStreamingResponse:
@@ -469,6 +550,9 @@ class GraphsResourceWithStreamingResponse:
         self.get = to_streamed_response_wrapper(
             graphs.get,
         )
+        self.get_tuples = to_streamed_response_wrapper(
+            graphs.get_tuples,
+        )
 
 
 class AsyncGraphsResourceWithStreamingResponse:
@@ -489,4 +573,7 @@ class AsyncGraphsResourceWithStreamingResponse:
         )
         self.get = async_to_streamed_response_wrapper(
             graphs.get,
+        )
+        self.get_tuples = async_to_streamed_response_wrapper(
+            graphs.get_tuples,
         )
